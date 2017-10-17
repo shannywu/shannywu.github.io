@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Massive Data Analysis] Mining Data Streams | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Massive Data Analysis] Mining Data Streams</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Massive Data Analysis] Mining Data Streams</h1><div class="post-meta">May 22, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Reservoir-Sampling"><span class="toc-number">1.</span> <span class="toc-text">Reservoir Sampling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DGIM"><span class="toc-number">2.</span> <span class="toc-text">DGIM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bloom-Filtering"><span class="toc-number">3.</span> <span class="toc-text">Bloom Filtering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Flajolet-Martin"><span class="toc-number">4.</span> <span class="toc-text">Flajolet-Martin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AMS"><span class="toc-number">5.</span> <span class="toc-text">AMS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Slides"><span class="toc-number">6.</span> <span class="toc-text">Slides</span></a></li></ol></div></div><div class="post-content"><p>Spring 2016 Massive Data Analysis Lecture Notes<br>Ch4. Mining Data Streams<br>Instructor: Jia-Shung Wang<br>Credit: Jane To</p>
+<p><br><br><a id="more"></a></p>
+<ul>
+<li>名詞解釋 <strong>Data Stream</strong>: data arrives in a stream or streams, and if it is not processed immediately or stored, then it is lost forever.</li>
+<li>We can think of the <strong>data </strong>as <strong>infinite</strong> and <strong>non-stationary</strong> (the distribution changes over time)<ul>
+<li>Google queries</li>
+<li>Twitter or Facebook status updates<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463920338676_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>問題：The system <strong>cannot store the entire stream</strong> accessibly</li>
+<li><strong>Stochastic Gradient Descent</strong> (SGD) is an example of a stream algorithm</li>
+<li><p>Types of queries one wants on answer on a data stream:</p>
+<ol>
+<li>Sampling data from a stream: Construct a random sample</li>
+<li>Queries over sliding windows: Number of items of type <strong>$x$</strong> in the last <strong>$k$</strong> elements of the stream</li>
+<li>Filtering a data stream: Select elements with property <strong>$x$</strong> from the stream</li>
+<li>Counting distinct elements: Number of distinct elements in the last <strong>$k$</strong> elements of the stream</li>
+<li>Estimating moments: Estimate average and standard deviation of last $k$ elements</li>
+<li>Finding frequent elements</li>
+</ol>
+</li>
+<li><p>If we want the facility to ask a wide variety of <strong>ad-hoc queries</strong>, a common approach is to <strong>store a sliding window</strong> of each stream in the working store. </p>
+</li>
+<li>Streams often <strong>deliver elements very rapidly</strong>, must process elements <strong>in real time</strong>, or lose the opportunity to process them at all.<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463924877325_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+<ul>
+<li>Sampling from a Data Stream:<ul>
+<li>問題：can not store the entire stream，所以 store a sample，有兩種：<ol>
+<li>Sampling a fixed proportion - As the stream grows the sample also gets bigger<ul>
+<li>Naïve solution: Generate a random integer in $[0..9]$ for each query, and store the query if the integer is 0, otherwise discard</li>
+</ul>
+</li>
+<li>Sampling a fixed-size sample - As the stream grows, the sample is of fixed size<ul>
+<li>問題：我們無法事先知道stream的長度，而因著記憶體的限制，我們需要 maintain a random sample $S$ of size exactly $s$ tuples</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Reservoir-Sampling"><a href="#Reservoir-Sampling" class="headerlink" title="Reservoir Sampling"></a>Reservoir Sampling</h2><ul>
+<li>說明：當樣本總體很大或者是在數據流上進行採樣的時候，我們往往無法預知總體的樣本實力個數 $N$。那麼 Reservoir Sampling 就是這樣一組演算法，即使不知道 $N$ ，也能保證每個樣本實力被採樣到的概率依然相等</li>
+<li><p>參考：<a href="http://www.sigmainfy.com/blog/reservoir-sampling-learning-notes.html" target="_blank" rel="external">http://www.sigmainfy.com/blog/reservoir-sampling-learning-notes.html</a><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463925859408_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li>$\frac{s}{n}$ 這個機率的意思是在你已看過 $n$ 個 elements 之後，一個 element 在 $S$ 裡面的機率</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463928625603_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li>Sliding Window<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463929389248_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+<h2 id="DGIM"><a href="#DGIM" class="headerlink" title="DGIM"></a>DGIM</h2><ul>
+<li><p>參考：<a href="http://nathanlvzs.github.io/blog/DGIM-Algorithm-and-Python-Implementation.html" target="_blank" rel="external">http://nathanlvzs.github.io/blog/DGIM-Algorithm-and-Python-Implementation.html</a></p>
+</li>
+<li><p>stream of positive integers(另一種應用，不是 bit stream 的用法)<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463972410427_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+</ul>
+<h2 id="Bloom-Filtering"><a href="#Bloom-Filtering" class="headerlink" title="Bloom Filtering"></a>Bloom Filtering</h2><ul>
+<li>目的：as a way to eliminate most of the tuples that do not meet the criterion.</li>
+<li>組成：$n$ 位的數組，$k$ 個 hash 函數，$m$ 個待過濾的元素</li>
+<li>演算法請看 <a href="http://blog.csdn.net/dannyPolyu/article/details/9319811" target="_blank" rel="external">http://blog.csdn.net/dannyPolyu/article/details/9319811</a></li>
+<li>優點：<ul>
+<li>空間效率和查詢時間都遠遠超過一般演算法</li>
+<li>沒有 False negatives，如果某個元素確實沒有在該集合中，那麼 Bloom Filter 是是不會爆該元素存在集合中，所以<strong>不會漏報</strong>）</li>
+</ul>
+</li>
+<li>缺點：<ul>
+<li>有一定的機率會有 <strong>False positives</strong>，即 Bloom Filter 報告某個元素在該集合中，事實上該元素根本不在集合中<ul>
+<li>機率是 $(1 - e^{(- km / n)})^{k}$</li>
+<li>刪除困難</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>總結：<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463972992413_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+<h2 id="Flajolet-Martin"><a href="#Flajolet-Martin" class="headerlink" title="Flajolet-Martin"></a>Flajolet-Martin</h2><ul>
+<li>目的：counting distinct elements - Number of distinct elements in the last $k$ elements of the stream</li>
+<li>下面幾張投影片個人覺得看了應該就會懂了，他就是要說明 distinct element 的數量是 $2^{R}$<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463975695867_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463975893254_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463975937092_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+<ul>
+<li><p>Computing Moments</p>
+<ul>
+<li><p>定義：Assume the universal set is ordered so we can speak of the $i$th element for any $i$. Let $m_{i}$ be the number of occurrences of the $i$th element for any $i$.<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463979284379_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>0th moment</p>
+<ul>
+<li>number of distinct elements</li>
+<li>The problem just considered</li>
+</ul>
+</li>
+<li>1st moment<ul>
+<li>count of the numbers of elements = length of the stream</li>
+<li>Easy to compute</li>
+</ul>
+</li>
+<li>2nd moment<ul>
+<li>= surprise number $S$</li>
+<li>= a measure of how uneven the distribution is (我自己把它想成變異數)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="AMS"><a href="#AMS" class="headerlink" title="AMS"></a>AMS</h2><ul>
+<li><p>目的：Estimating moments - Estimate std. dev. of last $k$ elements<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463980193673_13282431_1032476210177414_481779713_o.jpg?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463980758808_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li>a: 5 次, b: 4 次, c: 3 次, d: 3 次</li>
+<li>$X_{1}$ (3rd): c, $X_{2}$ (8th): d, $X_{3}$ (13th): a</li>
+<li>$X_{1}.value = 3$ (因為 c 包含這次並在之後出現的次數是三次)</li>
+</ul>
+</li>
+</ul>
+<h2 id="Slides"><a href="#Slides" class="headerlink" title="Slides"></a>Slides</h2><ul>
+<li>from CS246 Mining Massive Data Sets, Stanford University</li>
+<li>Part 1: <a href="http://web.stanford.edu/class/cs246/slides/streams-1.pdf" target="_blank" rel="external">http://web.stanford.edu/class/cs246/slides/streams-1.pdf</a></li>
+<li>Part 2: <a href="http://web.stanford.edu/class/cs246/slides/streams-2.pdf" target="_blank" rel="external">http://web.stanford.edu/class/cs246/slides/streams-2.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/05/22/mda-ch5-link-analysis/" class="pre">[Massive Data Analysis] Link Analysis</a><a href="/blog/2016/05/22/mda-chapter-3-finding-similar-items/" class="next">[Massive Data Analysis] Finding Similar items</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/10/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-3-variable/">Tensorflow 初學筆記 (3) Variable</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/06/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-2-session/">Tensorflow 初學筆記 (2) Session</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/05/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-1-tensorflow/">Tensorflow 初學筆記 (1) Tensorflow 簡介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

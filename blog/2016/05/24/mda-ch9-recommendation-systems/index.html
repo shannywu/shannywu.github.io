@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Massive Data Analysis] Recommendation Systems | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Massive Data Analysis] Recommendation Systems</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Massive Data Analysis] Recommendation Systems</h1><div class="post-meta">May 24, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Advertising-Opportunities-and-Overview-of-Recommendation-Systems"><span class="toc-number">1.</span> <span class="toc-text">Advertising Opportunities and Overview of Recommendation Systems</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Content-based-Recommender-Systems"><span class="toc-number">2.</span> <span class="toc-text">Content-based Recommender Systems</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Collaborative-Filtering"><span class="toc-number">3.</span> <span class="toc-text">Collaborative Filtering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recommendations-via-Optimization"><span class="toc-number">4.</span> <span class="toc-text">Recommendations via Optimization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dimensionality-Reduction"><span class="toc-number">5.</span> <span class="toc-text">Dimensionality Reduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Singular-Value-Decomposition-SVD"><span class="toc-number">6.</span> <span class="toc-text">Singular-Value Decomposition (SVD)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Latent-Factor-Models"><span class="toc-number">7.</span> <span class="toc-text">Latent Factor Models</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Slides"><span class="toc-number">8.</span> <span class="toc-text">Slides</span></a></li></ol></div></div><div class="post-content"><p>Spring 2016 Massive Data Analysis Lecture Notes<br>Ch9. Recommendation Systems<br>Instructor: Jia-Shung Wang</p>
+<p><br><br><a id="more"></a></p>
+<h2 id="Advertising-Opportunities-and-Overview-of-Recommendation-Systems"><a href="#Advertising-Opportunities-and-Overview-of-Recommendation-Systems" class="headerlink" title="Advertising Opportunities and Overview of Recommendation Systems"></a>Advertising Opportunities and Overview of Recommendation Systems</h2><ul>
+<li>Content-based systems examine properties of the items recommended.</li>
+<li><strong>Collaborative filtering</strong> systems recommend items based on similarity measures between users and/or items.</li>
+<li>Formal model<ul>
+<li>$X$ = set of Customers, $S$ = set of Items —&gt; Utility function $u: X × S \rightarrow R$</li>
+<li>但是透過Utility Matrix僅能得到很少量的資訊，一般解法：cluster items and/or users.</li>
+</ul>
+</li>
+<li><strong>Key Problems</strong><ul>
+<li>Gathering <strong> known </strong> ratings for matrix：How to collect the data in the utility matrix? 訪問、根據行為推斷（如被買得多代表high rating?）</li>
+<li>Extrapolate unknown ratings from the known ones (<strong>Utility matrix $U$ is sparse</strong>) 大部分的使用者都不會打分數，相對地，大部分的影片都沒有被打分數，且新影片沒人打分數，新使用者也沒打過分數<ul>
+<li>Mainly interested in high unknown ratings</li>
+<li>We are not interested in knowing what you don’t like but what you like</li>
+<li><strong>Evaluating extrapolation methods：</strong>How to measure success/performance of recommendation methods</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Three approaches to recommender systems</strong><ul>
+<li>Content-based</li>
+<li>Collaborative</li>
+<li>Latent factor based</li>
+</ul>
+</li>
+</ul>
+<h2 id="Content-based-Recommender-Systems"><a href="#Content-based-Recommender-Systems" class="headerlink" title="Content-based Recommender Systems"></a>Content-based Recommender Systems</h2><h2 id="Collaborative-Filtering"><a href="#Collaborative-Filtering" class="headerlink" title="Collaborative Filtering"></a>Collaborative Filtering</h2><ul>
+<li>簡述：the techniques for using one person’s behavior to predict what other people will do.</li>
+<li><p><strong>User-user collaborative filtering：</strong>對於一個用戶X，首先找到與其相似的一個用戶集合，這個相似是透過他們的rating來判定的，rating的likes和dislikes越相似，用戶就越相似。然後推薦這些相似用戶及裡的用戶喜歡的items並且預測X評分最高的items給用戶X<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463925113356_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li><p>計算使用者相似度的方法 Let <strong> $r_{x}$ </strong> be the vector of user $x$’s ratings,</p>
+<ul>
+<li><strong>Jaccard similarity: </strong>沒有考慮評分，容易導致相似度計算錯誤</li>
+<li><p><strong>Cosine similarity: </strong>將沒有評分的 item 設為 0<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463925525441_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>Pearson correlation coefficient：$S_{xy} =$ items rated by both users $x$ and $y$ 減掉每行平均<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463928969022_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>From similarity metric to recommendations 評分預測：迭代求出與 $X$ 最相似的 $k$ 個用戶，預測 $X$ 對這 $k$ 個用戶也評分過的 items 的分數</p>
+<ul>
+<li>Let $r_{x}$ be the vector of user $x$’s ratings, and $N$ be the set of $k$ users most similar to $x$ who have rated item $i$<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463927696720_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Item-item collaborative filtering：</strong>推薦給用戶那些和他們之前喜歡的物品相似的物品。比如說，他會因為你買過 “Data Mining” 而推薦給你 “Machine Learning”。不過，Item CF並不利用物品內容的屬性季換物品之間的相似度，而是透過分析用戶行為紀錄來計算物品之間的相似度。基於 Item CF，可以利用用戶的歷史行為對推薦結果提供解釋，比如說推薦給你”天龍八部”的原因可能是因為你之前喜歡”射雕英雄傳”</p>
+</li>
+<li><p>Common Practice of CF</p>
+<ul>
+<li>Define <strong>similarity </strong> $s_{ij}$ of items $i$ and $j$, select $k$ nearest neighbors $N(i; x)$</li>
+<li>Items most similar to $i$, that were rated by $x$</li>
+<li>Estimate rating $r_{xi}$ as the weighted average：<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463931173650_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+<li><p><strong>Item-Item vs. User-User</strong></p>
+<ul>
+<li>In practice, it has been observed that <strong>item-item</strong> often works better than user-user because items are simpler, users have multiple tastes</li>
+<li>UserCF 的推薦結果著重於反應和用戶興趣相似的小群體熱點，而 ItemCF 則著重於維繫用戶的歷史興趣。換句話說，UserCF 的推薦更社會化，反映了用戶所在的小型興趣群體中物品的熱門程度，ItemCF 的推薦更加個性化，反映了用戶自己的興趣傳承。<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463931581732_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+<li><p><strong>Pros/Cons of Collaborative Filtering</strong></p>
+<ul>
+<li>Pro:<ol>
+<li>Works for any kind of item</li>
+<li>No feature selection needed</li>
+</ol>
+</li>
+<li>Cons:<ol>
+<li>Cold Start: Need enough users in the system to find a match 需要夠多的使用者才能找到 match</li>
+<li>Sparsity: The user/ratings matrix is sparse. Hard to find users that have rated the same items </li>
+<li>First rater: Cannot recommend an item that has not been previously rated. New items, Esoteric items 無法推薦沒有被評分過的物品</li>
+<li>Popularity bias: Cannot recommend items to someone with unique taste. Tends to recommend popular items 傾向於推薦熱門的物品</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>Hybrid Methods: 實作兩個或多個不同的推薦系統然後將他們合併，或是加入 content-based 的方法到 CF 中，這樣新的物品就有 item profile，也有辦法處理新的使用者</li>
+<li>Evaluation using RMSE<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463980360357_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+<h2 id="Recommendations-via-Optimization"><a href="#Recommendations-via-Optimization" class="headerlink" title="Recommendations via Optimization"></a>Recommendations via Optimization</h2><ul>
+<li>目標：Make good recommendations<ul>
+<li><strong>Lower RMSE</strong> –&gt; <strong>better recommendations</strong></li>
+<li>想要推薦一些使用者沒看過的物品 –&gt; 很難做到好的推薦</li>
+<li>所以就來建一個系統，可以在已知 rating 的物品或是使用者上做出好的推薦，並期望這個系統也能對未知 rating 的物品有很好的預測結果</li>
+</ul>
+</li>
+<li>Idea：設定一組 <strong>$w$</strong> 值，使得 <strong>$w$</strong> 可以對已知 rating 的物品或是使用者做出好的推薦 work well on known (user, item) ratings<ul>
+<li>如何找到 <strong>$w$</strong> ? Define an objective function and solve the optimization problem</li>
+<li>Find <strong>$w_{ij}$</strong> that minimize SSE on training data (Think of <strong>$w$</strong> as a vector of numbers)（p.62有找min.的方法）<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463980796965_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+</ul>
+<h2 id="Dimensionality-Reduction"><a href="#Dimensionality-Reduction" class="headerlink" title="Dimensionality Reduction"></a>Dimensionality Reduction</h2><ul>
+<li>資料的低維表示 空間中的點不是完全隨機分布的，它們分布在某個子空間中。我們的目標就是找到這個可以有效表示所有資料的子空間。</li>
+<li><p>UV-decomposition：矩陣分解，像下圖 $M$ 可以分解成 $U \times V$<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463981472634_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li>完整的UV-decomposition演算法：<ol>
+<li>Preprocessing of the matrix <strong>$M$</strong>.</li>
+<li>Initializing <strong>$U$</strong> and <strong>$V$</strong>.</li>
+<li>Ordering the optimization of the elements of <strong>$U$</strong> and <strong>$V$</strong>.</li>
+<li>Ending the attempt at optimization.</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Singular-Value-Decomposition-SVD"><a href="#Singular-Value-Decomposition-SVD" class="headerlink" title="Singular-Value Decomposition (SVD)"></a>Singular-Value Decomposition (SVD)</h2><ul>
+<li>Allows an exact representation of any matrix, and also makes it easy to eliminate the less important parts of that representation to produce an approximate representation with any desired number of dimensions. <strong>一個能適用於任意的矩陣的一種矩陣分解的方法</strong></li>
+<li><p><strong>Definition of SVD</strong>: Let $M$ be an $m \times n$ matrix, and let the rank of $M$ be $r$. Recall that the rank of a matrix is the largest number of rows (or equivalently columns) we can choose for which no nonzero linear combination of the rows is the all-zero vector 0.<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463982032430_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>目標：find matrices $U$, $S$, and $V$ with the following properties</p>
+<ul>
+<li>$U$ $m \times r$ column-orthonormal matrix 每欄都是一個單位向量，欄和欄內積會是0</li>
+<li>$V$ $n \times r$ column-orthonormal matrix. 通常 $V$ 會使用轉置的型態 $V^{T}$，所以 $V^{T}$的列是正交的</li>
+<li>$S$ is a diagonal matrix; 對角矩陣，不在對角線上的元素都是 0. The elements of $S$ are called the singular values of $M$.<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463982777454_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+<li><p>The SVD of a matrix $M$ is strongly connected to the eigenvalues of the symmetric matrices $M^{T}M$ and $MM^{T}$</p>
+</li>
+<li>Interpretation of SVD</li>
+<li><p>SVD Example: Users-to-Movies (users-movies 矩陣，其中 row 代表使用者，column 代表一部電影)<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463983133826_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li><p>concepts 就是 SVD 分解要告訴我的，用戶是 sci-fi lover 和 romance lover 類型，電影是 sci-fi 和 romance 等類型。也就是不同的 genres, or topics。<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463984465378_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>我们可以將 $U$ 的列看成 concepts，如U的第一欄對應 Sci-Fi concept，第二欄對應 romance concept（第三欄可能代表其它的什麼，但不一定能用一個類别来描述和解釋）。我們從這裡可以看到，前 4 個使用者喜歡 sic-fi，後 3 個使用者喜歡 romance。</p>
+</li>
+<li>於是我們可以將 $U$ 矩陣看成是 user to concept similarity matrix。其中元素代表某個使用者對某個 concepts 的感興趣程度。這裡是說第一個使用者很喜歡 sci-fi concept (0.13)，而第五個使用者喜歡 romance concept (-0.59) </li>
+<li><p>Sigma 矩陣中的值可看做是 concepts 的強度，如 sci-fi concept 強度 (12.4) 就比 romance concept 的強度 (9.5)強。注意這裡還有第三種 concepts，但是其強度相較前面兩者太小，可以忽略。<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463984909453_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>同樣的，我们可以將 $V$ 矩陣看成是 movies to concept similarity matrix。從 $V$ 矩陣的第一欄可以看到，第一部電影與第一個 concept 和第三個 concept 有較高的相關度，然而第三個 concept 強度過低，所以對解釋資料來說並不重要。</p>
+</li>
+</ul>
+</li>
+<li>總歸來說，SVD 個矩陣可以這樣表示 ‘<strong>movies</strong>’, ‘<strong>users</strong>’ 和 ‘<strong>concepts</strong>’<ul>
+<li>$U$ user-to-concept similarity matrix</li>
+<li>$V$ movie-to-concept similarity matrix</li>
+<li>$S$ its diagonal elements, ‘strength’ of each concept</li>
+</ul>
+</li>
+</ul>
+<h2 id="Latent-Factor-Models"><a href="#Latent-Factor-Models" class="headerlink" title="Latent Factor Models"></a>Latent Factor Models</h2><ul>
+<li><p>簡介：LFM 屬於一種隱含語意分析技術，目的是找出潛在的主題或是分類。在推薦系統中它能夠基於使用者個行為對 item 進行自動分類，也就是把 item 劃分到不同的類別或是主題，這些類別或是主體可以理解為使用者的興趣。<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463986157170_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>見上圖 For now let’s assume we can approximate the rating matrix $R$ as a product of “thin” <strong>$Q · P^{T}$</strong></p>
+<ul>
+<li>$R$ 有 missing entries 但這裡可以忽略</li>
+<li>Basically, we will want the reconstruction error to be small on known ratings and we don’t care about the values on the missing ones</li>
+<li>與 SVD 不同之處：SVD 堅持 $U$ 和 $V$ 是正交的，但是 LFM 不在意</li>
+<li>“SVD” on Netflix data: $R ≈ Q · P^{T}（A = R, Q = U, P^{T} = SV^{T})$</li>
+<li>How to estimate the missing rating of user $x$ for item $i$?<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463986503904_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+<li><p>見上圖，使用者和電影在同一個二維空間裡，使用者所在的位置代表他對於在某個 dimension 的電影的喜好（或是討厭）程度。比如那個戴帽子的先生在第四象限，我們可以推論他喜歡 male-oriented movies，而且討厭 serious movie，於是我們可以推薦給他 “Dumb and Dumber”，而不會給他 “The Color Purple”。但是在同一張圖上，正中間那位先生就沒有被很好地分類，或許我們還需要另外的 dimension</p>
+</li>
+<li>參考：<span class="attrlink url author-d-iz88z86z86za0dz67zz78zz78zz74zz68zjz80zz71z9iz90z95biz78zz69zfai45jz71zbivvz89zz73zz68zehz70znz88zz72zz74zz82zz78zz79zm url"><a href="http://goo.gl/yXsL66" target="_blank" rel="external">http://goo.gl/yXsL66</a></span></li>
+</ul>
+<h2 id="Slides"><a href="#Slides" class="headerlink" title="Slides"></a>Slides</h2><ul>
+<li>from CS246 Mining Massive Data Sets, Stanford University</li>
+<li>Part 1: <a href="http://i.stanford.edu/~jure/pub/talks2/07-recsys1.pdf" target="_blank" rel="external">http://i.stanford.edu/~jure/pub/talks2/07-recsys1.pdf</a></li>
+<li>Part 2: <a href="http://i.stanford.edu/~jure/pub/talks2/08-recsys2.pdf" target="_blank" rel="external">http://i.stanford.edu/~jure/pub/talks2/08-recsys2.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/" class="pre">tmux - A terminal multiplexer</a><a href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/" class="next">[Massive Data Analysis] Advertising on the Web</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/10/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-3-variable/">Tensorflow 初學筆記 (3) Variable</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/06/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-2-session/">Tensorflow 初學筆記 (2) Session</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/05/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-1-tensorflow/">Tensorflow 初學筆記 (1) Tensorflow 簡介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

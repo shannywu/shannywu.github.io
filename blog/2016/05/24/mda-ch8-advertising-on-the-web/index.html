@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Massive Data Analysis] Advertising on the Web | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Massive Data Analysis] Advertising on the Web</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Massive Data Analysis] Advertising on the Web</h1><div class="post-meta">May 24, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Advertising-Opportunities-and-Online-Algorithms"><span class="toc-number">1.</span> <span class="toc-text">Advertising Opportunities and Online Algorithms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Online-Bipartite-Matching"><span class="toc-number">2.</span> <span class="toc-text">Online Bipartite Matching</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-Advertising"><span class="toc-number">3.</span> <span class="toc-text">Web Advertising</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BALANCE-Algoritm"><span class="toc-number">4.</span> <span class="toc-text">BALANCE Algoritm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Slides"><span class="toc-number">5.</span> <span class="toc-text">Slides</span></a></li></ol></div></div><div class="post-content"><p>Spring 2016 Massive Data Analysis Lecture Notes<br>Ch8. Advertising on the Web<br>Instructor: Jia-Shung Wang</p>
+<p><br><br><a id="more"></a></p>
+<h2 id="Advertising-Opportunities-and-Online-Algorithms"><a href="#Advertising-Opportunities-and-Online-Algorithms" class="headerlink" title="Advertising Opportunities and Online Algorithms"></a>Advertising Opportunities and Online Algorithms</h2><ul>
+<li>post ads directly, displayed ads, search ads</li>
+<li>Each of these methods, and many others like these, raise enormous privacy issues 各類型的線上廣告衍伸出隱私問題</li>
+<li>Online Algorithms<ul>
+<li><strong>Classic model of algorithms</strong><ul>
+<li>You get to see the entire input, then compute some function of it</li>
+<li>In this context, “offline algorithm”</li>
+</ul>
+</li>
+<li><strong>Online Algorithms</strong><ul>
+<li>You get to see the input one piece at a time, and need to make irrevocable（經決定後不可改變的） decisions along the way</li>
+<li>Similar to the data stream model</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Online-Bipartite-Matching"><a href="#Online-Bipartite-Matching" class="headerlink" title="Online Bipartite Matching"></a>Online Bipartite Matching</h2><ul>
+<li>Bipartite Matching：一張二分圖上的匹配稱作二分匹配，理所當然所有的匹配邊都是這橫跨這兩群點的邊，就像是連連看一樣。</li>
+<li>Max. Matching 最大匹配：二分圖G的所有匹配中，edges數量最多的匹配</li>
+<li>p.7-9動畫：<ul>
+<li>男生一群、女生一群，p.7 的連線指的是他們彼此間的 Preferences，而目標是要找到一個 match 方式使得男生女生都可以剛剛好連到有 preference 的對象 (Match boys to girls so that maximum number of preferences is satisfied)</li>
+<li>先連 2-b 和 4-a，因為 2 和 4 除了 b 和 a 以外沒有其他的 preference 了；接著連 1-c 和 3-d（不能重複連到女生，一個配舞伴的概念，一個女生不會有兩個舞伴）</li>
+</ul>
+</li>
+<li><strong>Matching Algorithm</strong><ul>
+<li>Problem：Find a maximum matching for a given bipartite graph</li>
+<li>第一步：初始化，只有男生組</li>
+<li>第二步開始：在每個round，決定其中一個女生的選擇 (girl’s <strong>edges</strong> are revealed)<ul>
+<li>At that time, we have to decide to either 兩種選擇<ul>
+<li>Pair the girl with a boy 配對</li>
+<li>Do not pair the girl with any boy 不配對</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Greedy algorithm for the online graph matching problem</strong>: 把女生配給<strong>任何</strong>有資格的男生 (If there is none, do not pair girl) 一開始就把一些明顯可以配對的點給配對起來（能連的先連一連），這樣就不必替每一個未匹配點建立交錯樹了。這個手段在圖很龐大的時候可以發揮作用。</li>
+<li><p>最佳配對方法與 greedy algorithm 的比較</p>
+<ul>
+<li>Competitive Ratio: For input $I$, suppose greedy produces matching $M_{greedy}$ while an optimal matching is $M_{opt}$, <strong>Competitive ratio</strong> = $\textrm{min_all_possible_inputs } I (\left |M_{greedy} \right | / \left |M_{opt} \right |)$ —&gt; greedy’s <strong>worst</strong> performance over all possible inputs $I$</li>
+<li><p>Consider a case: $M_{greedy} ≠ M_{opt}$ 當 greedy 所算出來的配對不是最佳時</p>
+<ul>
+<li>Consider the set $G$ of girls matched in $M_{opt}$ but not in $M_{greedy}$ 女生配到的男生不是最佳的</li>
+<li>Then every boy $B$ adjacent to girls in $G$ is already matched in $M_{greedy}$</li>
+<li>If there would exist such non-matched (by $M_{greedy}$) boy adjacent to a non-matched girl then greedy would have matched them</li>
+<li>Since boys $B$ are already matched in $M_{greedy}$ then $\left |M_{greedy} \right | \geq \left | B \right |$</li>
+<li><p>Summary so far: $G$ 表示在 $M$ 中存在 $M_{opt}$，但在 $M_{greedy}$ 中不存在的右節點的集合，$B$ 表示 $G$ 中有節點的鄰接邊的左節點的集合 —&gt; $\left |M_{greedy} \right | \geq \left | B \right |$<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463906443045_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>There are at least $\left | G \right |$ such boys ($\left | G \right | \leq \left | B \right |$) otherwise the optimal algorithm couldn’t have matched all girls in $G$. So $\left | G \right | \leq \left | B \right | \leq \left |M_{greedy} \right |$</p>
+</li>
+<li>By definition of $G$ also: $\left |M_{opt} \right | \leq \left |M_{greedy} \right | + \left | G \right |$</li>
+<li>Worst case is when $\left | G \right |$ = $\left | B \right |$ = |$M_{greedy}$|</li>
+<li>$\left |M_{opt} \right | \leq 2 \left |M_{greedy} \right |$ then $\left |M_{greedy} \right | / \left |M_{opt} \right | \geq \frac{1}{2}$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Web-Advertising"><a href="#Web-Advertising" class="headerlink" title="Web Advertising"></a>Web Advertising</h2><ul>
+<li>Google’s Adwords System<ul>
+<li>Show only a limited number of ads with each query 針對每次搜尋，Google 只會顯示一部分廣告</li>
+<li>Decide <strong>which ads to show</strong>, as well as <strong>the order </strong>in which to show them 所以Google必須決定哪些廣告要show以及show的順序</li>
+<li>Users of the Adwords system specified a budget 而每個廣告商都有一定的預算，這就是 Adwords 要解決的問題</li>
+<li>The revenue of a selection of ads is the total value of the ads selected 廣告收入來自於廣告的價值<ul>
+<li>而廣告的價值來自於投標的商品 (the product of the bid) 以及廣告點擊率</li>
+<li>on-line algorithm 的價值則是用一個月內（因為廣告商的預算通常以一個月為週期）獲取的總收入來衡量</li>
+<li>所以對所有演算法要有統一的衡量標準：<strong>competitive ratio</strong> = the minimum total revenue for that algorithm, on any sequence of search queries / the revenue of the optimum off-line algorithm 該演算法的最小收入 / off-line algorithm 的最大收入</li>
+</ul>
+</li>
+<li>又回到 Google Adwords 要解決的問題<ul>
+<li>A stream of queries arrives at the search engine: $q_{1}, q_{2}, …$ 今天搜尋引擎收到一個 query stream</li>
+<li>Several advertisers bid on each query 而 stream 裡每個 query 都有多個廣告商競標</li>
+<li>When query $q_{i}$ arrives, search engine must pick a subset of advertisers whose ads are shown 當 query 被送進來，搜尋引擎必須決定要 show 哪些廣告</li>
+<li><strong>Goal: Maximize search engine’s revenues 目標當然是為搜尋引擎帶來最大收益</strong></li>
+<li>Simple solution: Instead of raw bids, use the “<strong>expected revenue per click</strong>” (i.e., Bid*CTR) 去計算每次的廣告點擊能有多少的預期收入</li>
+</ul>
+</li>
+<li><strong>Expected revenue per click</strong><ul>
+<li>Budget: 每個廣告商都有預算的限制，搜尋引擎必須保證廣告的投放不會超過他們的預算</li>
+<li>CTR 是未知的：每個廣告都有不同的可能性會被點到<ul>
+<li><strong>Clickthrough rate</strong> (CTR) is measured historically</li>
+<li><strong>Exploration vs. exploitation</strong> 是一個很困難的問題<ul>
+<li>Exploit: Should we keep showing an ad for which we have good estimates of click-through rate 要持續曝光廣告使得它能擁有較好的 CTR</li>
+<li>Explore:  Shall we show a brand new ad to get a better sense of its click-through rate 還是要放全新的廣告，讓這個廣告的CTR比較好預測</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Greedy Algorithm</strong><ul>
+<li>假設在一個很簡單的環境下：每個 query 都只有一個廣告、每個廣告商的預算相同、每個廣告被點擊的機會一樣、每個廣告的價值也一樣</li>
+<li>For a query pick any advertiser who has bid <strong>1</strong> for that query</li>
+<li>Worst case: Two advertisers $A$ and $B$, $A$ bids on query $x$, $B$ bids on $x$ and $y$, same budgets of $4<ul>
+<li>Query stream: $x x x x y y y y$</li>
+<li>Worst case greedy choice: $B B B B$ _ _ _ _—&gt; $\mathrm{Competitive  ratio} = \frac{4}{8} = \frac{1}{2}$</li>
+<li>Optimal:  $A A A A B B B B$</li>
+</ul>
+</li>
+<li>Greedy algorithm is deterministic – it always resolves draws in the same way</li>
+</ul>
+</li>
+<li>所以有人提出了 <strong>BALANCE Algoritm</strong> 來處理這些問題</li>
+</ul>
+</li>
+</ul>
+<h2 id="BALANCE-Algoritm"><a href="#BALANCE-Algoritm" class="headerlink" title="BALANCE Algoritm"></a>BALANCE Algoritm</h2><ul>
+<li>概念：For each query, pick the advertiser with the largest unspent budget 對於每次 query，選擇出價最高且剩餘預算最多的廣告商。如果多個廣告商剩餘預相同，則任意挑選一個，並盡可能的平衡所有廣告商的消費。</li>
+<li>與 optimal 比較：Two advertisers $A$ and $B$, $A$ bids on query $x$, $B$ bids on $x$ and $y$, same budgets of $4<ul>
+<li>Query stream: $x x x x y y y y$</li>
+<li>BALANCE choice: $A B A B B B$ _ _ </li>
+<li>Optimal: $A A A A B B B B$</li>
+<li>In general, for BALANCE on 2 advertisers —&gt; $\mathrm{Competitive ratio} = \frac{6}{8} = \frac{3}{4}$</li>
+</ul>
+</li>
+<li>另一個case (w.l.o.g.): 2 advertisers, $A_{1}$ and $A_{2}$, each with budget $B (\geq 1)$<ul>
+<li>最佳解會把兩方的預算都用完，而 BALANCE 則是必須用完至少一方的預算</li>
+<li>如果用不完，可以分配更多的 queries. Whenever BALANCE makes a mistake (both advertisers bid on the query), advertiser’s unspent budget only decreases. Since optimal exhausts both budgets, one will for sure get exhausted</li>
+<li>Assume BALANCE exhausts $A_{2}$’s budget, but allocates $x$ queries fewer than the optimal</li>
+<li>Revenue: $BAL = 2B - x$</li>
+</ul>
+</li>
+<li>In the general case, worst competitive ratio of BALANCE is $1–1/e = approx. 0.63$</li>
+<li>Balance Algorithm with Many Bidders<ul>
+<li>There are $N$ advertisers, $A_{1}, A_{2}, … , A_{N}$. 有 $N$ 個廣告商</li>
+<li>Each advertiser has a budget $B = N$ 預算都是 $N$</li>
+<li>There are $N$ queries $q_{1}, q_{2}, … , q_{N}$. 有 $N$ 個queries</li>
+<li>Advertiser $A_{i}$ bids on queries $q_{1}, q_{2}, … , q_{i}$ and no other queries. 廣告商 $A_{i}$ 投錢在 $q_{1}, q_{2}, … , q_{i}$ 上</li>
+<li>The query sequence consists of $N$ rounds. The $i$th round consists of $B$ occurrences of query $q_{i}$ and nothing else. 查詢序列有 $N$ 個 round，第 $i$ 個 round 包含了 $B$ 個 $q_{i}$</li>
+<li>The optimum off-line algorithm assigns the $B$ queries <em>q</em>_$i$ in the $i$th round to $A_{i}$ for all $i$. Thus, all queries are assigned to a bidder, and the total revenue of the optimum algorithm is $N$_$B$. 最佳的演算法會把第 $i$ 個 round 的 $B$ 個 $q_{i}$ 分配給 $A_{i}$ (for all $i$). 所以所有的 queries 都會被分配到一個廣告商，總收入會是 $N_{B}$</li>
+</ul>
+</li>
+<li>Worst case for BALANCE   <ul>
+<li>$N$ advertisers: $A_{1}, A_{2}, … , A_{N}$, each with budget $B &gt; N$</li>
+<li>Queries: $N \cdot B$ queries appear in $N$ rounds of ($B$ queries each)</li>
+<li>Bidding<ul>
+<li>Round 1 queries: bidders $A_{1}, A_{2}, … , A_{N}$</li>
+<li>Round 2 queries: bidders       $A_{2}, A_{3}, … , A_{N}$</li>
+<li>Round $i$ queries:  bidders             $A_{i}, A_{i+1}, … , A_{N}$</li>
+</ul>
+</li>
+<li>Optimum allocation: Allocate round $i$ queries to $A_{i}$ ($B$ queries each)</li>
+<li>Optimum revenue $N \cdot B$</li>
+</ul>
+</li>
+<li>BALANCE 分析<ul>
+<li>So after the first <strong> $k = N(1-1/e)$ </strong> rounds, we cannot allocate a query to any advertiser</li>
+<li>$\mathrm{Revenue} = B \cdot N(1-1/e)$ (queries of the first $j$ rounds.)</li>
+<li>$\mathrm{Competitive ratio} = 1-1/e$</li>
+</ul>
+</li>
+<li><p>Generalized Version</p>
+<ul>
+<li>BALANCE 在 bids 是 0 或 1 的時候表現很好，但是實務上 bids 不可能只是 0 或 1，可能是任意值（預算也是任意的），而此時 BALANCE 就無法適當地表現 (fails to weight the sizes of the bids properly)</li>
+<li><p>舉例：<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_5E9hkKwu42g_p.537642_1463921068512_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li>有十個 $q$: 最佳演算法會把十個 $q$ 都給 $A_{2}$，然後得到 100 塊收入</li>
+<li>但是 BALANCE 會把十個都給 $A_{1}$ 因為 $A_{1}$ 的預算比較高，但結果是只有 10 塊收入</li>
+<li>There is no competitive ratio higher than 0 that holds for the Balance Algorithm.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Slides"><a href="#Slides" class="headerlink" title="Slides"></a>Slides</h2><ul>
+<li>from CS246 Mining Massive Data Sets, Stanford University</li>
+<li><a href="http://web.stanford.edu/class/cs246/slides/advertising.pdf" target="_blank" rel="external">http://web.stanford.edu/class/cs246/slides/advertising.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/05/24/mda-ch9-recommendation-systems/" class="pre">[Massive Data Analysis] Recommendation Systems</a><a href="/blog/2016/05/23/mda-chapter-7-clustering/" class="next">[Massive Data Analysis] Clustering</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/10/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-3-variable/">Tensorflow 初學筆記 (3) Variable</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/06/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-2-session/">Tensorflow 初學筆記 (2) Session</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/05/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-1-tensorflow/">Tensorflow 初學筆記 (1) Tensorflow 簡介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

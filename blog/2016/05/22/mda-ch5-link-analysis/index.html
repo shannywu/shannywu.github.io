@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Massive Data Analysis] Link Analysis | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Massive Data Analysis] Link Analysis</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Massive Data Analysis] Link Analysis</h1><div class="post-meta">May 22, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PageRank"><span class="toc-number">1.</span> <span class="toc-text">PageRank</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TrustRank"><span class="toc-number">2.</span> <span class="toc-text">TrustRank</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HITS-Hypertext-Induced-Topic-Selection"><span class="toc-number">3.</span> <span class="toc-text">HITS (Hypertext-Induced Topic Selection)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Slides"><span class="toc-number">4.</span> <span class="toc-text">Slides</span></a></li></ol></div></div><div class="post-content"><p>Spring 2016 Massive Data Analysis Lecture Notes<br>Ch5. Link Analysis<br>Instructor: Jia-Shung Wang<br>Credit: Jane To</p>
+<p><br><br><a id="more"></a><br>前情提要：Google 因為用了 PageRank 所以變成搜尋引擎的老大，眼紅的傢伙就用所謂的 link spam 來設法讓 Google 網頁排序受影響，所以後來又發展了所謂的 TrustRank，讓你更信任 Google。而 HITS 是一個幾乎可以說跟 Google 的 PageRank 一樣厲害的排序法哦～</p>
+<h2 id="PageRank"><a href="#PageRank" class="headerlink" title="PageRank"></a>PageRank</h2><p><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463995813966_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463996458370_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463996481391_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463996593965_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463996658214_undefined?fit=max&amp;w=882" alt=""></p>
+<ul>
+<li>Topic-Specific PageRank<ul>
+<li>Goal: Evaluate Web pages not just according to their popularity, but by how close they are to a particular topic, e.g. “sports” or “history”<strong>  </strong><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1463996995730_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+</ul>
+<h2 id="TrustRank"><a href="#TrustRank" class="headerlink" title="TrustRank"></a>TrustRank</h2><p>前情提要，最一開始的 spammer 是 term spamming (p.100)，就是在你的網頁中偷偷放一堆term只讓搜尋引擎看得到，但是這個 PageRank 就可以打趴他了。所以後來又出現了新的 spammer 叫作 link spamming，就是養 link farm 來借他人之力長自己威風的概念。因此，為了打擊犯罪，就需要使用 TrustRank</p>
+<ul>
+<li>TrustRank: topic-specific PageRank with a teleport set of <strong>trusted pages</strong>, for example, .edu domains, similar domains for non-US schools</li>
+<li>Basic principle: Approximate isolation: It is rare for a “good” page to point to a “bad” (spam) page</li>
+<li>作法：<ul>
+<li>Sample a set of <strong>seed pages</strong> from the web</li>
+<li>Have an <strong>oracle</strong> (human) to identify the good pages and the spam pages in the seed set. (這是一項貴森森的任務, so we must make seed set as small as possible)</li>
+</ul>
+</li>
+<li>選擇 seed set<ul>
+<li>遇到的問題<ul>
+<li>Human has to inspect each seed page, so seed set must be as small as possible</li>
+<li>Must ensure every <strong>good page</strong> gets adequate trust rank, so need make all good pages reachable from seed set by short paths</li>
+</ul>
+</li>
+<li>選擇方法：<ul>
+<li>Pick the top <strong>$k$</strong> pages by PageRank (Theory is that you can’t get a bad page’s rank really high)</li>
+<li><strong>Use trusted domains</strong> whose membership is controlled, like .edu, .mil, .gov</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>兩種解法：</li>
+</ul>
+<ol>
+<li>Use a <strong>threshold</strong> value and mark all pages below the trust threshold as spam</li>
+<li>Spam mass estimation (想法來自What fraction of a page’s PageRank comes from <strong>spam </strong>pages?)<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1464002213800_undefined?fit=max&amp;w=882" alt=""></li>
+</ol>
+<h2 id="HITS-Hypertext-Induced-Topic-Selection"><a href="#HITS-Hypertext-Induced-Topic-Selection" class="headerlink" title="HITS (Hypertext-Induced Topic Selection)"></a>HITS (Hypertext-Induced Topic Selection)</h2><ul>
+<li>說明：Is a measure of importance of pages or documents, similar to PageRank     </li>
+<li>目的：“Say we want to find good newspapers”<ul>
+<li>Don’t just find newspapers. Find “experts” – people who link in a coordinated way to good newspapers</li>
+</ul>
+</li>
+<li>想法：Links as votes - Page is more important if it has more links</li>
+<li><p>組成：Hubs and Authorities</p>
+<ul>
+<li><strong>Authorities</strong> are pages containing useful information (候選人) e.g. Newspaper home pages</li>
+<li><strong>Hubs</strong> are pages that link to authorities (有投票權的公民) e.g. List of newspapers<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1464002842471_undefined?fit=max&amp;w=882" alt=""><br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1464002872753_undefined?fit=max&amp;w=882" alt=""></li>
+</ul>
+</li>
+<li><p>演算法<br><img src="https://hackpad-attachments.imgix.net/hackpad.com_QA099fPu6Tx_p.543864_1464017465618_undefined?fit=max&amp;w=882" alt=""></p>
+</li>
+<li><p>PageRank and HITS are two solutions to the same problem:</p>
+<ul>
+<li>What is the value of an in-link from $u$ to $v$?<ul>
+<li>In the PageRank model, the value of the link depends on the links <strong>into</strong> $u$</li>
+<li>In the HITS model, it depends on the value of the other links <strong>out of</strong> $u$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Slides"><a href="#Slides" class="headerlink" title="Slides"></a>Slides</h2><ul>
+<li>from CS246 Mining Massive Data Sets, Stanford University</li>
+<li>Part 1: <a href="http://web.stanford.edu/class/cs246/slides/PageRank-1.pdf" target="_blank" rel="external">http://web.stanford.edu/class/cs246/slides/PageRank-1.pdf</a></li>
+<li>Part 2: <a href="http://web.stanford.edu/class/cs246/slides/PageRank-2.pdf" target="_blank" rel="external">http://web.stanford.edu/class/cs246/slides/PageRank-2.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/05/23/mda-ch6-frequent-itemsets/" class="pre">[Massive Data Analysis] Frequent itemsets</a><a href="/blog/2016/05/22/mda-ch4-mining-data-streams/" class="next">[Massive Data Analysis] Mining Data Streams</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/10/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-3-variable/">Tensorflow 初學筆記 (3) Variable</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/06/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-2-session/">Tensorflow 初學筆記 (2) Session</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2017/01/05/tensorflow-e5-88-9d-e5-ad-b8-e7-ad-86-e8-a8-98-1-tensorflow/">Tensorflow 初學筆記 (1) Tensorflow 簡介</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Machine-Learning/">Machine Learning</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>
