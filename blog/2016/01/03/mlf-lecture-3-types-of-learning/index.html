@@ -1,0 +1,96 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Machine Learning Foundations] Lecture 3: Types of Learning | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Machine Learning Foundations] Lecture 3: Types of Learning</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Machine Learning Foundations] Lecture 3: Types of Learning</h1><div class="post-meta">Jan 3, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Learning-with-Different-Output-Space"><span class="toc-number">1.</span> <span class="toc-text">Learning with Different Output Space</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Learning-with-Different-Data-Label"><span class="toc-number">2.</span> <span class="toc-text">Learning with Different Data Label</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Learning-with-Different-Protocol"><span class="toc-number">3.</span> <span class="toc-text">Learning with Different Protocol</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Learning-with-Different-Input-Space"><span class="toc-number">4.</span> <span class="toc-text">Learning with Different Input Space</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a></li></ol></div></div><div class="post-content"><p><br></p>
+<p>Machine Learning Foundations Notes<br>Lecture 3: Types of Learning<br>Instructor: Hsuan-Tien Lin</p>
+<p><br><br><a id="more"></a><br>上一章提到機器可以藉由 PLA 來處理是非題，這章節要探討跟多不同類型的機器學習問題，這些問題又跟是非題有什麼不一樣。</p>
+<h2 id="Learning-with-Different-Output-Space"><a href="#Learning-with-Different-Output-Space" class="headerlink" title="Learning with Different Output Space"></a>Learning with Different Output Space</h2><p>這小節從輸出 $y$ 的角度來看機器學習，介紹幾種不同的機器學習類型。</p>
+<ul>
+<li>Binary Classification<br>簡單來講就是是非題，應用非常廣泛。也就是說從輸出 $y$ 來看機器學習，如果 $y$ 的答案只有二選一，這樣的分類問題就叫做 Binary Classification 二元分類。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d883-10-28.png" alt=""></p>
+<ul>
+<li>Multiclass Classification<br>如果輸出的答案是單選題，從多個選項裡選出一個正確的，那就是 Multiclass Classification 多類別分類問題。應用也很多，比如飲料販賣機辨識錢幣的問題、數字辨識、圖像辨識、電子郵件類型辨識等等。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d884-01-36.png" alt=""></p>
+<ul>
+<li><p>Regression<br>如果用上述的分類方法來解決醫院裡可能會碰到的問題：二元分類可以來解決病人是否生病，而多元分類可以來判斷病人得到的是哪種癌症。</p>
+<p>但是如果想要知道病人「多久可以出院」或是「多久可以恢復」，這樣的問題輸出 $y$ 是幾天、幾個小時，輸出的空間是實數，也就是 $y = \mathbb{R}$，這樣的問題在統計學裡面叫作迴歸分析。可以應用在股市分析、氣溫預測等等。</p>
+</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d884-16-44.png" alt=""></p>
+<ul>
+<li><p>Structured Learning<br>如果問題的輸出空間是一個序列結構，我們希望電腦去學習這樣的結構，就是一個 Structured Learning 結構化學習。比如自然語言處理中的自動詞性標注問題 (Sequence Tagging Problem)，這類問題的輸入是以句子為單位，句子中含有某種結構或組織，處裡的同時需要考慮前後文。可以把這類的問題想像成一個很大的分類問題，這些類別之間有某一種結構上的關係。其他應用還有分析蛋白質的立體結構、文本剖析等等。</p>
+<p>這樣的問提比較複雜，解法多是由多類別的分類問題延伸出來的。</p>
+</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d884-44-56.png" alt=""></p>
+<ul>
+<li>Mini Summary<br>這小節從輸出 $y$ 來看機器學習，如果 $y$ 只有兩類，就是 Binary Classification；如果 $y$ 多於兩類，那就是 Multiclass Classification；如果 $y$ 是一個實數空間，那就是 Regression；如果 $y$ 是一個結構關係，那就是 Structured Learning。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d885-40-51.png" alt=""></p>
+<h2 id="Learning-with-Different-Data-Label"><a href="#Learning-with-Different-Data-Label" class="headerlink" title="Learning with Different Data Label"></a>Learning with Different Data Label</h2><p>這個小節則是從輸入 $y_{n}$ 的角度來看機器學習，根據輸入資料的標註與否，有不同的方法可以來進行學習。</p>
+<ul>
+<li><p>Supervised Learning<br>在訓練的過程中告訴機器答案，也就是給機器「有標註」的資料，就叫做 Supervised Learning 監督是學習。比如在訓練販賣機辨識錢幣的時候，給機器每種錢幣的大小、重量，告訴它什麼大小、重量的錢幣就是什麼幣值。</p>
+</li>
+<li><p>Unsupervised Learning<br>在訓練的過程中沒有告訴機器答案，只給它要分類的資料，這樣的問題叫做 Unsupervised Learning 非監督是學習。比如在訓練販賣機辨識錢幣的時候，只給機器每種錢幣的大小、重量，但是不告訴它什麼大小、重量的錢幣就是什麼幣值，要讓它會自動從給定的資料中找出潛在的規則，這樣的問題又叫做 Clustering 分群。</p>
+<p>其他非監督是學習的問題還有密度分析、outlier detection 等等。</p>
+</li>
+<li><p>Semi-supervised Learning<br>在訓練的過程中只告訴機器部分答案，另一部份讓機器自己去找出答案，這叫做 Semi-supervised Learning 半監督式學習。在部分資料較難取得的狀況下，或是取得標註的成本較高時，可能就會使用半監督式學習。比如我們想知道網路上的大頭照是誰，因為量很多，要取得每張照片的答案非常困難，那就標注部分的照片，剩下的讓機器根據有標注的資料自己去找答案。又比如在預測藥物對病人是否有效時，由於做人體實驗成本高、時間又長，所以就用少數的標注資料，讓機器學習。</p>
+</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d885-26-59.png" alt=""></p>
+<ul>
+<li>Reinforcement Learning<br>有時候問題的輸出 $y$ 是很難描述的，但是我們可以在機器做出判斷的時候，用獎勵或是處罰的方式，讓機器知道這個判斷是對或錯，這叫做 Reinforcement Learning 增強式學習，機器會透過一次次的經驗累積來學習一個技能。比如你要教一隻狗聽到指令的時候乖乖坐下，很難直接告訴他怎麼做，但是可以用獎勵或是處罰來告訴牠這是對的還是錯的。又比如線上廣告系統，可以透過顧客的點擊率來知道這個廣告是好或不好，進而幫助系統更完整。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d885-35-18.png" alt=""></p>
+<ul>
+<li>Mini Summary<br>上述四種學習方式主要的不同在於資料有什麼樣的標記、有什麼樣 $y_{n}$ 的資訊。最核心的則是監督是學習，有很多的方法都是從監督是學習的方法發展而來。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d885-39-02.png" alt=""></p>
+<h2 id="Learning-with-Different-Protocol"><a href="#Learning-with-Different-Protocol" class="headerlink" title="Learning with Different Protocol"></a>Learning with Different Protocol</h2><p>這小節從我們和機器溝通的方式來看機器學習，有幾種不同的方式將資料餵給機器。</p>
+<ul>
+<li>Batch Learning<br>一次把整批的收集到的資料餵給機器學習演算法，就叫做 Batch Learning。是在機器學習裡面最典型的一種跟機器溝通的方式。像是丟給機器一本書，讓機器自己去裡面學、去找答案。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d889-15-361.png" alt=""></p>
+<ul>
+<li><p>Online Learning<br>新的資料一筆一筆餵給機器，機器學習的假設 $g$ 也一直在變動，希望每過一輪，$g$ 的判斷能越來越準確，這樣循序的方式叫做 Online Learning 線上學習。這像是老師在教學，舉一個例子，然後告訴你答案，學會了之後再舉另一個例子，再告訴你答案，這樣循序漸進的方式。</p>
+<p>PLA 很容易應用在 Online Learning 上。而 Reinforcement Learning 的資料也是一筆筆進來的，也比較接近 Online Learning。</p>
+</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d889-25-32.png" alt=""></p>
+<ul>
+<li>Active Learning<br>從機器的角度來說，前述兩個方法都是被動的。如果機器會問問題，或者說會從它有的資料裡去找一個它不會認的例子來問，這樣的方式叫做 Active Learning 主動學習。如果機器可以很有技巧地問問題，那麼就可以透過很少的問題很快遞學到東西。當我們要取得標註資料的成本很高的時候，就會使用 Active Learning。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d889-28-39.png" alt=""></p>
+<ul>
+<li>Mini Summary<br>這小節講述我們如何用不同餵資料的方式來跟機器溝通，一次丟就是 Batch Learning；循序漸進則是 Online Learning；讓機器有問問題的能力就是 Active Learning。當然還有其他不同的方法，但核心都是 Batch Learning，這門課之後也會著重在這上面。</li>
+</ul>
+<h2 id="Learning-with-Different-Input-Space"><a href="#Learning-with-Different-Input-Space" class="headerlink" title="Learning with Different Input Space"></a>Learning with Different Input Space</h2><p>這小節要從輸入 $x$，也就是特徵值，來看機器學習。</p>
+<ul>
+<li>Concrete Features<br>輸入 $x$ 的特徵很明確、很具體，就是 Concrete Features。通常這樣的特徵裡都帶有人類的智慧和對這個問題的描述，也稱作 Domain Knowledge。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d8810-08-17.png" alt=""></p>
+<ul>
+<li>Raw Features<br>如果輸入 $x$ 的特徵沒有經過人為處理，就叫做 Raw Features。比如數字辨識，如果用數字有沒有對稱或者數字的密度來當特徵，這些特徵就屬於 Concrete Features；如果是把每張圖片裡的數字轉成一張 256 個維度的向量，這就是 Raw Features，比較抽象，對機器學習來說也比較困難。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d8810-12-25.png" alt=""></p>
+<ul>
+<li>Abstract Features<br>如果輸入 $x$ 的特徵是抽象的，比如編號這類的資料，這就叫 Abstract Features。這時候就要有人去抽取出一部分更具體的特徵出來，另一部分可以讓機器自己去學，而這些特徵可能包含 Concrete Feature 或 Raw Feature。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-18-e4b88be58d8810-17-14.png" alt=""></p>
+<ul>
+<li>Mini Summary<br>這小節提到了三種輸入的形式，有具體的特徵的稱為 Concrete Features；如果輸入沒有那麼具體，就需要人或是機器想辦法去抽取具體的特徵出來。</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
+<li>Learning with Different Output space: Classification, Regression, and Structured Learning</li>
+<li>Learning with Different Data Label: Supervised, Unsupervised, Semi-supervised, and Reinforcement Learning</li>
+<li>Learning with Different Protocol: Batch, Online, and Active Learning</li>
+<li>Learning with Different Input Space: Concrete, Raw and Abstract Features</li>
+<li>Slides: <a href="http://www.csie.ntu.edu.tw/~htlin/mooc/doc/03_present.pdf" target="_blank" rel="external">http://www.csie.ntu.edu.tw/~htlin/mooc/doc/03_present.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/01/05/mlf-lecture-4-feasibility-of-learning/" class="pre">[MLF] Lecture 4: Feasibility of Learning</a><a href="/blog/2015/12/29/mlf-lecture-2-learning-to-answer-yesno/" class="next">[Machine Learning Foundations] Lecture 2: Learning to Answer Yes/No</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/11/22/python-nltk-tools/">[Python] NLTK 工具整理</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/17/python-nltk-wordnet/">[Python] NLTK and WordNet</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch4-mining-data-streams/">[Massive Data Analysis] Mining Data Streams</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/nltk/" style="font-size: 15px;">nltk</a> <a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/standford-parser/" style="font-size: 15px;">standford parser</a> <a href="/blog/tags/wordnet/" style="font-size: 15px;">wordnet</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

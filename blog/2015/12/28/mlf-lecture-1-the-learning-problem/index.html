@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Machine Learning Foundations] Lecture 1. The Learning Problem | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Machine Learning Foundations] Lecture 1. The Learning Problem</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Machine Learning Foundations] Lecture 1. The Learning Problem</h1><div class="post-meta">Dec 28, 2015<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-Is-Machine-Learning"><span class="toc-number">1.</span> <span class="toc-text">What Is Machine Learning?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Applications-of-Machine-Learning"><span class="toc-number">2.</span> <span class="toc-text">Applications of Machine Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Components-of-Learning"><span class="toc-number">3.</span> <span class="toc-text">Components of Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Machine-Learning-and-Other-Fields"><span class="toc-number">4.</span> <span class="toc-text">Machine Learning and Other Fields</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a></li></ol></div></div><div class="post-content"><p><br></p>
+<p>Machine Learning Foundations Notes<br>Lecture 1. The Learning Problem<br>Instructor: Hsuan-Tien Lin</p>
+<p><br><br><a id="more"></a></p>
+<h2 id="What-Is-Machine-Learning"><a href="#What-Is-Machine-Learning" class="headerlink" title="What Is Machine Learning?"></a>What Is Machine Learning?</h2><ul>
+<li><p>From Learning to Machine Learning</p>
+<ul>
+<li>Learning: acquiring skill with experience accumulated from <span style="color:#0000ff;"><strong>observations</strong> </span>學習是從觀察出發，經過學習，轉化成有用的技巧</li>
+<li>Machine Learning: acquiring skill with experience accumulated/<span style="color:#ff0000;">computed</span> from <span style="color:#0000ff;"><strong>data</strong> </span>用電腦來模擬學習的過程，經過對環境的觀察（資料），變成對電腦有用的技能</li>
+<li>What is skill? improve some performance measure 技能可以視為某一種表現的增進<br><img src="https://codingdiarysite.files.wordpress.com/2017/10/1-1.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>Why use machine learning?</p>
+<ul>
+<li>ML is an alternative route to build complicated systems</li>
+<li>when human cannot program the system manually 靠腦力一行行寫下規則來計算很困難，讓機器自己分析資料比較容易，比如說要讓機器人上火星</li>
+<li>when needing rapid decisions that humans cannot do 需要快速做決定的事情，人沒有辦法短時間內判斷，如超短線的股票交易</li>
+<li>when needing to be user-oriented in a massive scale 做個人化服務</li>
+</ul>
+</li>
+<li><p>Key Essence of Machine Learning 什麼時候才需要用到機器學習?</p>
+<ul>
+<li>exists some ‘<span style="color:#0000ff;"><strong>underlying pattern</strong></span>‘ to be learned 有<strong><span style="color:#0000ff;">淺藏模式</span></strong>可以學習，要有某些目標</li>
+<li>but no programmable (easy) definition 但沒有很辦法很簡單地用程式直接定義，又或者說沒有辦法用很簡單的邏輯判斷來解決</li>
+<li>somehow there is <strong><span style="color:#0000ff;">data</span> </strong>about the pattern 這些淺藏的規則有很多資料可以做為機器學習的來源，別忘了機器學習是從<span style="color:#0000ff;"><strong>資料</strong></span>開始的</li>
+</ul>
+</li>
+</ul>
+<h2 id="Applications-of-Machine-Learning"><a href="#Applications-of-Machine-Learning" class="headerlink" title="Applications of Machine Learning"></a>Applications of Machine Learning</h2><ul>
+<li>生活中的食衣住行育樂都有機器學習的應用，也可以用機器學習來使這些日常生活所需要的事情更便利</li>
+<li>Food (Sadilek et al., 2013): from Twitter data to tell food poisoning likeliness of restaurant properly</li>
+<li>Clothing (Abu-Mostafa, 2012): from sales figures and client surveys to give good fashion recommendations to clients</li>
+<li>Housing (Tsanas and Xifara, 2012): from characteristics of building and their energy load to predict energy load of other buildings closely</li>
+<li>Transportation (Stallkamp et al., 2012): from some traffic sign images and meanings to recognize traffic signs accurately</li>
+<li>Education: from students’ records to predict whether a student can give correct answer to another quiz question</li>
+<li>Entertainment e.g., Recommender System: from how many users have rated some movies to predict how a user would rate an unrated movie</li>
+</ul>
+<h2 id="Components-of-Learning"><a href="#Components-of-Learning" class="headerlink" title="Components of Learning"></a>Components of Learning</h2><ul>
+<li><p>Example: Metaphor Using Credit Approval 銀行判斷是否該核發信用卡給某位申請者</p>
+<ul>
+<li>銀行有的資料：申請者的年齡、性別、收入等等</li>
+<li>機器要學的是銀行該如何核發信用卡，該如何決定發卡或不發卡給某人</li>
+<li><p>Formalize the Learning Problem</p>
+<ul>
+<li>把信用卡申請者的資料想成是 $x$，銀行是否核發信用卡想成 $y$</li>
+<li>有一個未知的函式 $f$（也就是潛在的規則），可以讓 $x$ 對應到 $y$，機器就是要去學習算出這個<em> f</em></li>
+<li>而我們有一組資料 $D$，裡頭是過去銀行對申請者核發信用卡的資料，$x_{1}$是過去的某位申請者一號，$y_{1}$ 是銀行是否發卡給他</li>
+<li><p>從資料觀察中可以得到一些假設 hypothesis，然後讓電腦去學習這些假設是對的還是錯的，最後得出一個 $g$<img src="https://codingdiarysite.files.wordpress.com/2017/10/1-11.png" alt="1-1"></p>
+</li>
+<li><p>詳細的流程：<img src="https://codingdiarysite.files.wordpress.com/2017/10/1-13.png" alt="1-1"></p>
+</li>
+<li><p>$f$ 是一個未知的理想公式，它產生了資料（產生的過程不知道）</p>
+</li>
+<li>從資料經過機器學習演算法產生 $g$</li>
+<li>$g$ 代表某一種效能增進，即 $g$ 跟 $f$ 越像越好（$g$ 和 $f$ 不會一模一樣）</li>
+<li>Machine Learning: use <strong>data</strong> to compute hypothesis $g$ that approximates target $f$</li>
+<li>$H$ 和 $A$ 則是機器學習的 Model</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Machine-Learning-and-Other-Fields"><a href="#Machine-Learning-and-Other-Fields" class="headerlink" title="Machine Learning and Other Fields"></a>Machine Learning and Other Fields</h2><ul>
+<li><p>Machine Learning and Data Mining</p>
+<ul>
+<li>It’s difficult to distinguish ML and DM in reality</li>
+<li>Machine Learning: use data to compute hypothesis g that approximates target $f$ 機器學習是希望用資料去找出一個假說 $g$，使得 $g$ 和我們想要的目標 $f$ 很相像</li>
+<li>Data Mining: use (huge) data to find property that is interesting 資料探勘希望用資料去找出有趣的事情，比如超市經營者想知道某消費者買了 A 商品，會再買什麼商品。資料探勘傳統上會使用相當大量的資料，去找出對特定的應用有趣或有用的性質。<br><img src="https://codingdiarysite.files.wordpress.com/2017/10/1-14.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>Machine Learning and Artificial Intelligence</p>
+<ul>
+<li>ML is one possible route to realize AI</li>
+<li>Artificial Intelligence: compute something that shows intelligent behavior 希望電腦可以做出聰明的東西，比如電腦會自動下棋、自動開車</li>
+<li>機器學習可以說是實現人工智慧的一種方法<br><img src="https://codingdiarysite.files.wordpress.com/2017/10/1-15.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>Machine Learning and Statistics</p>
+<ul>
+<li>statistics: many useful tools for ML</li>
+<li>Statistics: use data to make inference about an unknown process 使用資料來做推論，推論一個原來不知道的事情，傳統的統計學從數學出發，在統計學裡，會有一些數學假設，最後得出一個可以證明的推論</li>
+<li>機器學習從資料出發，演算法比較重視如何算出來，不只是數學上的結果如何</li>
+<li>統計可以說是實現機器學習的一種方法<br><img src="https://codingdiarysite.files.wordpress.com/2017/10/1-16.png" alt="1-1"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
+<li>What is Machine Learning? use data to approximate target</li>
+<li>Applications of Machine Learning: Almost everywhere</li>
+<li>Components of Machine Learning: $A$ takes $D$ and $H$ to get $g$</li>
+<li>Machine Learning and Other Fields: related DM, AI and Statistics</li>
+<li>Slides: <a href="http://www.csie.ntu.edu.tw/~htlin/mooc/doc/01_present.pdf" target="_blank" rel="external">http://www.csie.ntu.edu.tw/~htlin/mooc/doc/01_present.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2015/12/29/mlf-lecture-2-learning-to-answer-yesno/" class="pre">[Machine Learning Foundations] Lecture 2: Learning to Answer Yes/No</a><a href="/blog/2015/11/10/nlp-lab-09-writeahead-and-induction-of-grammar-patterns/" class="next">[NLP Lab] WriteAhead and Induction of Grammar Patterns</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/11/22/python-nltk-tools/">[Python] NLTK 工具整理</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/17/python-nltk-wordnet/">[Python] NLTK and WordNet</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch4-mining-data-streams/">[Massive Data Analysis] Mining Data Streams</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/nltk/" style="font-size: 15px;">nltk</a> <a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/standford-parser/" style="font-size: 15px;">standford parser</a> <a href="/blog/tags/wordnet/" style="font-size: 15px;">wordnet</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

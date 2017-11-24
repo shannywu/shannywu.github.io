@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[MLF] Lecture 5: Training versus Testing | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[MLF] Lecture 5: Training versus Testing</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[MLF] Lecture 5: Training versus Testing</h1><div class="post-meta">Jan 7, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Recap-and-Preview"><span class="toc-number">1.</span> <span class="toc-text">Recap and Preview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Number-of-Lines"><span class="toc-number">2.</span> <span class="toc-text">Effective Number of Lines</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Effective-Number-of-Hypotheses"><span class="toc-number">3.</span> <span class="toc-text">Effective Number of Hypotheses</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Break-Point"><span class="toc-number">4.</span> <span class="toc-text">Break Point</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a></li></ol></div></div><div class="post-content"><p>這章要進入機器學習的核心問題，到底為什麼機器可以學到東西？如果 Hypothesis Set 無限大的話會發生什麼事情？</p>
+<a id="more"></a>
+<h2 id="Recap-and-Preview"><a href="#Recap-and-Preview" class="headerlink" title="Recap and Preview"></a>Recap and Preview</h2><p>前一章證明了如果 Hypothesis Set $H$ 是有限的 $M$ 個，而且資料量 $N$ 夠大，不管演算法 $A$ 選出來的 $g$ 是什麼，$E_{in}$ 和 $E_{out}$ 都會很接近。</p>
+<p>而如果 $A$ 找到了一個 $g$ 使得 $E_{in}$ 接近 $0$，那麼 PAC 可以保證 $E_{in}$ 也大概會是 $0$，如此一來機器學習是可行的。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-22-e4b88ae58d8812-45-07.png" alt="螢幕快照 2017-10-22 上午12.45.07"></p>
+<ul>
+<li>Two Central Questions<br>從第一堂課到現在，我們把機器學習的核心拆成了兩個問題：</li>
+</ul>
+<ol>
+<li>我們希望 $E_{in}$ 和 $E_{out}$ 很接近，也就是測試的結果跟訓練時得到的結果很接近</li>
+<li>我們希望 $E_{out}(g)$ 很小<br>針對這兩個問題，Hypothesis Set 的大小 $M$ 又扮演什麼樣的角色？</li>
+</ol>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-22-e4b88ae58d8812-50-32.png" alt=""></p>
+<ul>
+<li>Trade-off on $M$<br>如果 Hypothesis Set 很小，也就是 $M$ 很小，我們可以保證 $E_{in}$ 接近 $E_{out}$，但也因為 $M$ 小，演算法的選擇有限，也因此 $E_{in}$ 可能不會是一個很小的值，誤差會很大。</li>
+</ul>
+<p>如果 Hypothesis Set 很大，演算法比較容易選到一個好的 $g$，如此一來可以得到一個比較好的 $E_{in}$，誤差比較小，但是 $M$ 太大的時候，我們就無法保證 $E_{in}$ 和 $E_{out}$ 接近。（根據 Hoeffding’s Inequality，壞事發生的機率會變很大很大）</p>
+<p>選擇正確的 $M$ 和未來機器學習可以學得多好有很大的關係。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-22-e4b88ae58d881-05-02.png" alt="螢幕快照 2017-10-22 上午1.05.02"></p>
+<ul>
+<li>Preview<br>從上一張投影片可以知道如果 $M$ 無限大，是不是就沒辦法做了？所以接下來要探討的問題是，我們要如何解決無限大的 $M$。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d889-07-26.png" alt="螢幕快照 2017-11-02 下午9.07.26"></p>
+<h2 id="Effective-Number-of-Lines"><a href="#Effective-Number-of-Lines" class="headerlink" title="Effective Number of Lines"></a>Effective Number of Lines</h2><ul>
+<li>Where did $M$ Come From?<br>Finite-bin version of Hoeffding’s Inequality 的推導是因為 $E_{in}$ - $E_{out}$ 大於誤差的事件 $B_{m}$ 發生，為了讓演算法 $A$ 可以在 Hypothesis Set 裡自由選擇，於是把每一個 hypothesis 發生不好的事情的機率 or 起來。</li>
+</ul>
+<p>而最壞的情況是 $B_{m}$ 沒有重疊，每個 $P$ 都不是 0，這時候如果 $M$ 是無限大，那麼聯集也沒有上限，那這個 union bound 就沒有意義了。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d889-24-09.png" alt=""></p>
+<ul>
+<li>Where did Uniform Bound Fail?<br>可以用 union bound 是因為每個假設會發生大誤差事件的資料集都不一樣。但實際上許多種大誤差事件發生的情況都很相似，也就是說這些事件發生的情況有很大一部份是重疊的（如右下圖）。這也造成我們高估了 union bound，導致我們沒有辦法處理 $M$ 無限大的狀況。</li>
+</ul>
+<p>那麼我們能不能把這無限多個 hypothesis，分成有限多類？讓實際內容差不多的假設成為一類。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d889-38-48.png" alt=""></p>
+<ul>
+<li>How many Lines are there?<br>怎麼把這些 hypothesis 分類呢？考慮平面上所有的線是我們的 hypothesis，有無限多條。如果只看一個資料點，其實只有兩種線，一種是將 $x_{1}$ 分成 <strong><span style="color:#0000ff;">o</span></strong> 的，另一種線是將 $x_{1}$ 分成 <strong><span style="color:#ff0000;">x</span></strong> 的。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d889-45-53.png" alt="螢幕快照 2017-11-02 下午9.45.53"></p>
+<p>如果看兩個資料點，就會有四種線。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d889-46-08.png" alt="螢幕快照 2017-11-02 下午9.46.08"></p>
+<ul>
+<li>How Many Kinds of Lines for Three Inputs?<br>如果有三個點呢？八種嗎？但其實有些情形是沒有辦法用一條直線來產生的。所以實際上會小於八種線。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8810-07-08.png" alt=""></p>
+<ul>
+<li>How Many Kinds of Lines for Four Inputs?<br>四個呢？除了下圖中的被刪掉的情況無法用一條線分開，另外七張圖都可以，而且是對稱的，所以最多會有十四種可能。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8810-09-30.png" alt="螢幕快照 2017-11-02 下午10.09.30"></p>
+<ul>
+<li>Effective Number of Lines<br>隨著輸入變多，有效的線會從指數成長變成非指數成長。也就是說就算今天有無限多條線，有效的線還是有限的。如果可以用這個有限的數字 $N$ 取代掉 $M$，而這個有效的數字又比 $2^{N}$ 小，不等式的右項就會趨近於 $0$，可以保證機器可以學到東西。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8810-23-44.png" alt="螢幕快照 2017-11-02 下午10.23.44"></p>
+<h2 id="Effective-Number-of-Hypotheses"><a href="#Effective-Number-of-Hypotheses" class="headerlink" title="Effective Number of Hypotheses"></a>Effective Number of Hypotheses</h2><ul>
+<li>Dichotomies: Mini-hypotheses<br>如果要用線以外的 Hypothesis Set，如平面、曲線，要怎麼說我們到底有幾種假設？</li>
+</ul>
+<p>我們將輸入空間變成 <strong><span style="color:#0000ff;">o</span></strong> 和 <strong><span style="color:#ff0000;">x</span></strong> 兩種情形，dichotomy 把這些點分成兩堆，產生很多 <strong><span style="color:#0000ff;">o</span></strong> 和 <strong><span style="color:#ff0000;">x</span></strong> 的組合。我們想知道一個 Hypothesis Set 可以產生多少種不同的 dichotomy。</p>
+<p>Hypothesis Set $H$ 是指平面上所有的線，每個 $h$ 對輸入空間 $X$ 中所有的點都可以取值，且可能有無限多條。而 dichotomy $H(x_{1}, x_{2}, …, x_{N})$ 只對 $N$ 個特定的點來取值，最多只會有 $2^{N}$ 種，而這個數字可以用來取代 Hoeffding’s Inequality 裡的 $M$。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8810-41-21.png" alt=""></p>
+<ul>
+<li>Growth Function<br>Dichotomy Set $H(x_{1}, x_{2}, …, x_{N})$ 受限於事先選好的 $x_{1}, x_{2}, …, x_{N}$，所以我們只用最大的 Dichotomy Set 的大小來當作衡量的依據，稱為 $m_{H}$，將來用來取代 $M$。$m_{H}$ 又稱為 growth function，這個函數的輸出一定是有限的。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8810-50-49.png" alt=""></p>
+<ul>
+<li>Growth Function for Positive Rays<br>簡單的 Hypothesis Set: Positive Rays，輸入是一維的實數，都在數線上。取一個門檻值，如果輸入比門檻值大，就是 $+1$，比門檻小就是 $-1$，不同的門檻值決定不一樣的假設。可以想成 1D 的 Perceptron。</li>
+</ul>
+<p>如果用這個 Hypothesis Set 可以切出 $N+1$ 種 dichotomies。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8810-59-18.png" alt=""></p>
+<ul>
+<li>Growth Function for Positives Intervals<br>有一個區間，在區間裡就是 $+1$，區間外是 $-1$。如果是這樣的 Hypothesis Set 可以產生 $\frac{1}{2}N^{2} + \frac{1}{2}N + 1$ 種 dichotomies。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8811-07-43.png" alt=""></p>
+<ul>
+<li>Growth Function for Convex Sets<br>定義一個 Hypothesis Set，裡頭的每個假設對應到平面上的一個 convex set（凸的集合），在集合裡的是 $+1$，集合外的是 $-1$。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8811-12-34.png" alt=""></p>
+<p>這個 Hypothesis Set 的成長函數則是 $2^{N}$。如果我們找到特別的 $N$ 個點，可以根據它們把 $2^{N}$ 種 dichotomies 都做出來，就叫做 $N$ <strong>shattered by</strong> $H$。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8811-15-19.png" alt=""></p>
+<h2 id="Break-Point"><a href="#Break-Point" class="headerlink" title="Break Point"></a>Break Point</h2><ul>
+<li>The Four Growth Functions<br>前面提到了三種成長函數，另外還有一種 2D Perceptrons。我們想要用成長函數取代 $M$，如果成長函數是多項式，後面 exponential 的項會減少得比較快，當 $N$ 夠大的時候，壞事發生的機率會越來越來小。如果成長函數是指數型成長，那麼就不能夠確保 $E_{in}$ 和 $E_{out}$ 接近。</li>
+</ul>
+<p>那 PLA 屬於哪一種呢？</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-02-e4b88be58d8811-21-19.png" alt=""></p>
+<ul>
+<li>Break Point of $H$<br>當下一個輸入出現時，dichotomies 組合不再是指數型成長的的那個點，就是 break point。比如說在 2D perceptrons 時，如果只有 3 個輸入，可以做出 8 種 dichotomies，但是當有 4 個輸入時，就沒有辦法做出 16 種 dichotomies 了，所以 4 這個點就是 break point。</li>
+</ul>
+<p>在這個 break point 上，$m_{H}(k) &lt; 2^{k}$，有了一個 break point $k$ 之後，比 $k$ 大的那些也都是 break point，所以 $k$ 也叫做 min. break point。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-07-e4b88be58d884-59-14.png" alt="螢幕快照 2017-11-07 下午4.59.14.png"></p>
+<ul>
+<li>The Four Break Points<br>Positive rays 的 break point 是 2，成長函數是 $O(N)$；positive intervals 的 break point 是 3，成長函數是 $O(N^{2})$；convex sets 沒有 break point；而在 2D perceptrons 時，break point 是 4。</li>
+</ul>
+<p>這樣看下來，break point 可能跟成長函數成長的速度有一點關係。我們是否可以證明有 break point 的時候，如果 break point 在 $k$ 發生，成長函數成長的速度會跟 $N^{k-1}$ 有關係？下一堂課來證明吧！</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/11/e89ea2e5b995e5bfabe785a7-2017-11-07-e4b88be58d885-08-11.png" alt="螢幕快照 2017-11-07 下午5.08.11.png"></p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
+<li>Recap and Preview</li>
+<li>Effective Number of Lines: at most 14 through the eye of 4 inputs</li>
+<li>Effective Number of Hypothesis: at most $m_{H}(N)$ through the eye of $N$ inputs</li>
+<li>Break Points: when$m_{H}(N)$ becomes ‘non-exponential’</li>
+<li>Slides: <a href="https://www.csie.ntu.edu.tw/~htlin/mooc/doc/05_present.pdf" target="_blank" rel="external">https://www.csie.ntu.edu.tw/~htlin/mooc/doc/05_present.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/01/08/mlf-lecture-6-theory-of-generalization/" class="pre">[MLF] Lecture 6: Theory of Generalization</a><a href="/blog/2016/01/05/mlf-lecture-4-feasibility-of-learning/" class="next">[MLF] Lecture 4: Feasibility of Learning</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/11/22/python-nltk-tools/">[Python] NLTK 工具整理</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/17/python-nltk-wordnet/">[Python] NLTK and WordNet</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch4-mining-data-streams/">[Massive Data Analysis] Mining Data Streams</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/nltk/" style="font-size: 15px;">nltk</a> <a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/standford-parser/" style="font-size: 15px;">standford parser</a> <a href="/blog/tags/wordnet/" style="font-size: 15px;">wordnet</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

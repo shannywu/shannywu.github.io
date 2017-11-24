@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[Machine Learning Foundations] Lecture 2: Learning to Answer Yes/No | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[Machine Learning Foundations] Lecture 2: Learning to Answer Yes/No</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[Machine Learning Foundations] Lecture 2: Learning to Answer Yes/No</h1><div class="post-meta">Dec 29, 2015<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Perceptron-Hypothesis-Set"><span class="toc-number">1.</span> <span class="toc-text">Perceptron Hypothesis Set</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Perceptron-Learning-Algorithm-PLA"><span class="toc-number">2.</span> <span class="toc-text">Perceptron Learning Algorithm (PLA)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Guarantee-of-PLA"><span class="toc-number">3.</span> <span class="toc-text">Guarantee of PLA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Non-Separable-Data"><span class="toc-number">4.</span> <span class="toc-text">Non-Separable Data</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a></li></ol></div></div><div class="post-content"><p><br></p>
+<p>Machine Learning Foundations Notes<br>Lecture 2: Learning to Answer Yes/No<br>Instructor: Hsuan-Tien Lin</p>
+<p><br><br><a id="more"></a></p>
+<h2 id="Perceptron-Hypothesis-Set"><a href="#Perceptron-Hypothesis-Set" class="headerlink" title="Perceptron Hypothesis Set"></a>Perceptron Hypothesis Set</h2><ul>
+<li>回到上一單元中核發信用卡的問題，現在我們要介紹假設 $H$ 到底會長什麼樣子？<img src="https://codingdiarysite.files.wordpress.com/2017/10/1-17.png" alt="1-1"></li>
+<li><p>A Simple Hypothesis Set: the Perceptron 感知器<img src="https://codingdiarysite.files.wordpress.com/2017/10/1-18.png" alt="1-1"></p>
+<ul>
+<li>features of customer 把每一個申請者用一個多個維度的向量 $x = (x_{1}, x_{2}, …, x_{d})$ 來表示，其中每個維度有不同正面或負面的影響，決定銀行是否核發信用卡給這個申請者</li>
+<li>把每個維度乘上它的權重 $w_{i}$，經過綜合計算之後給申請者一個分數，如果分數超過某個標準就核發信用卡給他，如果沒有就不發卡</li>
+<li>結果 $y$ 為了簡單起見，用 1 來表示好，-1 來表示不好，所以我們要電腦做的事情就是讓電腦先算出一堆分數，減掉設定的門檻值，如果結果是正的就是好的，負的就是不好的</li>
+<li>不同的權重 $w$、不同的門檻，會造出不同的假設 $h$</li>
+</ul>
+</li>
+<li><p>把 $h(x)$ 整理一下，把門檻值 threshold 視為是一個權重，就可以將 $h(x)$ 整理成兩個向量內積<img src="https://codingdiarysite.files.wordpress.com/2017/10/1-19.png" alt="1-1"></p>
+</li>
+<li><p>再具體一點，$h$ 到底長什麼樣子?<img src="https://codingdiarysite.files.wordpress.com/2017/10/1-111.png" alt="1-1"></p>
+<ul>
+<li>在圖中，$x$ 對應到一個點，$y$ 對應到這個點是畫 <strong><span style="color:#0000ff;">o</span></strong> 還是 <strong><span style="color:#ff0000;">x</span></strong>，而 $h$ 是圖中的線，每一條線都是不一樣的預測</li>
+<li>從幾何的角度來看 perceptron 就是平面上一條條的線，另一個說法就是線性分類器，點單來說就是回答是非題（分成兩類）</li>
+</ul>
+</li>
+</ul>
+<h2 id="Perceptron-Learning-Algorithm-PLA"><a href="#Perceptron-Learning-Algorithm-PLA" class="headerlink" title="Perceptron Learning Algorithm (PLA)"></a>Perceptron Learning Algorithm (PLA)</h2><ul>
+<li><p>How to select $g$ from $H$? $H$可以想像成平面上所有的線，也就是所有的 perceptron，那要如何從這些線裡面找出最接近 $f$ 的那個 $g$ 呢？</p>
+<ul>
+<li>我們不知道 $f$，但我們知道<strong>資料是從 $f$ 產生的</strong>，所以我們可以要求 $g$ 跟 $f$ 至少在我們看過的資料裡面是很接近的，甚至一模一樣，也就是說把 $g$ 送來預測現有資料裡的 $x$ 的話，可以馬上就得到理想的 $y$</li>
+<li>很難，因為 $H$ 是無限的</li>
+<li>start from some $g_{0}$, and ‘<strong>correct</strong>’ its<br>mistakes on $D$ 換個角度想，如果我們先隨便找一條線，雖然這條線可能不太好，但是我們可以慢慢修正它，讓它越來越接近我們要的結果，這時候就可以用到 PLA</li>
+<li>will represent $g_{0}$ by its weight vector $w_{0}$</li>
+</ul>
+</li>
+<li><p><strong>Perceptron Learning Algorithm (PLA)</strong> <img src="https://codingdiarysite.files.wordpress.com/2015/12/1-13.png" alt="1-1"></p>
+<ul>
+<li>一開始有一條線 $w_{0} = 0$，代表什麼都不知道</li>
+<li>如果這條線還不完美，我們一定可以找得到資料中的某一個點 $(x_{n(t)}, y_{n(t)})$，使這條線 $w_{t}$ 犯了錯誤，所謂犯了錯誤表示用 $w_{t}$ 去跟 $x_{n(t)}$ 做預測（內積），得到的正負號跟理想中的正負號不一樣</li>
+<li>既然犯了錯就要想辦法修正，犯錯有兩種可能<ul>
+<li>要的是正的，給的是負的，代表 $w$ 和 $x$ 的角度太大 –&gt; $w+x$ 讓角度變小<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-1.png" alt="1-1"></li>
+<li>要的是負的，給的是正的，代表 $w$ 和 $x$ 的角度太小 –&gt; $w-x$ 讓角度變大<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-11.png" alt="1-1"></li>
+<li>如此重複修正，到不再犯錯為止，而最終結果叫做 $w_{PLA}$ 也就是 $g$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>要如何簡單地判斷它到底還有沒有錯誤？</p>
+<ul>
+<li>Cyclic PLA: 輪流檢查每一個點，如果點沒有錯就看下一個，有錯的話就修正，如果所有的點都檢查過了沒有犯錯，表示已經沒有錯誤<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-14.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>視覺化來看 PLA 怎麼修正 $H$ (slides p.10)</p>
+<ul>
+<li>為什麼分割線會和 $w_{t}$ 垂直？<ul>
+<li>從公式　$w \cdot x = w^{T}x= \left | \overrightarrow{w} \right | \left | \overrightarrow{x} \right | cos(\Theta )$ 可以知道當 $w$ 和 $x$ 的夾角 $\Theta$ 小於 90 度時，結果為正（<strong><span style="color:#0000ff;">o</span></strong>），反之結果為負（<strong><span style="color:#ff0000;">x</span></strong>），因此垂直線等於 90 度時，就是正與負的分界了。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>PLA 的一些問題</p>
+<ul>
+<li>它一定會停下來嗎? 什麼時候會停？</li>
+<li>就算真的停下來了，所得到的 $g$ 會跟 $f$ 相近嗎？</li>
+</ul>
+</li>
+</ul>
+<h2 id="Guarantee-of-PLA"><a href="#Guarantee-of-PLA" class="headerlink" title="Guarantee of PLA"></a>Guarantee of PLA</h2><ul>
+<li><p>PLA 什麼時候會停下來？</p>
+<ul>
+<li>If PLA halts, (necessary condition) $D$ allows some $w$ to make no mistake</li>
+<li>PLA 終止條件：沒有再犯任何錯誤，也就是說原本的資料必需要有一條線可以切開 –&gt; <strong>linear separable</strong> 線性可分<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-15.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>Assume linear separable $D$, does PLA always <strong>halt</strong>?</p>
+<ul>
+<li>想像 $w_{f}$ 是我們的目標，這條線很完美，可以把資料切開</li>
+<li>$\min_{n} y_{n} w_{f}^{T} x_{n}$ 表示每個點跟這條線的距離 $w_{f}^{T} x_{n}$乘上那個點理想的分類（我們想要它在哪一邊）$y_{n}$ 都要大於 0</li>
+<li>也就是說 PLA 每次選到犯錯的那個點，也會滿足前述的限制</li>
+<li>我們就可以對 $w_{f}^{T}$ 和 $w_{t+1}$ 做內積，衡量它們是否接近，內積的值越大，某種程度上代表它們越接近。但是內積越大有可能是因為向量的長度比較長，所以接著要處理向量長度的問題<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-16.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>PLA Fact: $w_{t}$ does not grow too fast</p>
+<ul>
+<li>PLA 的重點 $w_{t}$ changed only when mistake</li>
+<li>$w_{t}$ 不會成長太快，它只會靠 $\left | y_{n(t)}x_{n(t)} \right |^{2}$ 來成長（任意選到的犯錯的點）<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-17.png" alt="1-1"></li>
+<li>constant?<img src="https://codingdiarysite.files.wordpress.com/2015/12/22396600_1842663925750448_688631637_o.jpg" alt="22396600_1842663925750448_688631637_o"></li>
+</ul>
+</li>
+<li><p>這小節的 Fun Time 本來還看不懂，但只要推出上面的常數這題就不難了<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-18.png" alt="1-1"></p>
+</li>
+</ul>
+<h2 id="Non-Separable-Data"><a href="#Non-Separable-Data" class="headerlink" title="Non-Separable Data"></a>Non-Separable Data</h2><ul>
+<li><p>More about PLA</p>
+<ul>
+<li>如果資料是線性可分， PLA 一次選一個錯誤來修正，我們發現 $w_{f}$ 和 $w_{t}$ 成長很快，而 $w_{t}$ 成長緩慢，綜合以上兩點證明了 PLA 會停止</li>
+<li>PLA 的好處：快、實作簡單、可以用在多維的資料</li>
+<li>PLA 的壞處：<ol>
+<li>先假設了資料是線性可分，但不知道這個假設是否正確，這個假設是存在 $w_{f}$ 但如果已經知道了 $w_{f}$ 還做 PLA 做什麼？但是如果要知道這個假設是否正確，必須要找一個 $w_{f}$ 出來，這樣會陷入一個循環，所以某種角度我們其實不知道 PLA 會不會停下來</li>
+<li>就算真的有 $w_{f}$ 存在，那 PLA 多久會停下來？雖然剛剛推導出了 $R$ 和 $\rho $，但是 $\rho $ 是根據 $w_{f}$ 來的，但我們還是不知道 $w_{f}$ 在哪裡</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Learning with <strong>Noisy Data</strong></p>
+<ul>
+<li>收集資料的過程中可能會有一些雜訊，拿到的資料不見得是線性可分<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-19.png" alt="1-1"></li>
+<li>如何在有雜訊、不是線性可分的狀況下還是找到一條好的線來區分資料呢？</li>
+</ul>
+</li>
+<li><p>Line with Noise Tolerance</p>
+<ul>
+<li>假設雜訊相對於真正想學的 $f$ 是小的，代表在資料上 $y$ 和 $f$ 要有一定的對應程度</li>
+<li>如果要找 $g$ 和 $f$ 很像的話，在資料上也要滿足 $y$ 和 $g$ 很相像</li>
+<li>找一條犯的錯誤最少的線當作 $g$ –&gt; 可惜這是一個 NP-hard 的問題<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-110.png" alt="1-1"></li>
+</ul>
+</li>
+<li><p>Pocket Algorithm</p>
+<ul>
+<li>modify PLA algorithm (back lines) by <strong>keeping best weights in pocket </strong>想像成我們一直把我們認為最好的線抓在手上，每找到一條新的線就和手上的比，如果新的線比較好（犯的錯誤比較少），就拿新的<img src="https://codingdiarysite.files.wordpress.com/2015/12/1-111.png" alt="1-1"><br><img src="https://codingdiarysite.files.wordpress.com/2015/12/1-112.png" alt="1-1"></li>
+</ul>
+</li>
+</ul>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
+<li>Perceptron Hypothesis Set: hyperlanes/linear classifiers in $\mathbb{R}^{d}$</li>
+<li>Perceptron Learning Algorithm (PLA): correct mistakes and improve iteratively</li>
+<li>Guarantee of PLA: no mistake eventually if linear separable</li>
+<li>Non-separable Data: hold somewhat ‘best’ weights in pocket (pocket PLA)</li>
+<li>Slides: <a href="http://www.csie.ntu.edu.tw/~htlin/mooc/doc/02_present.pdf" target="_blank" rel="external">http://www.csie.ntu.edu.tw/~htlin/mooc/doc/02_present.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/01/03/mlf-lecture-3-types-of-learning/" class="pre">[Machine Learning Foundations] Lecture 3: Types of Learning</a><a href="/blog/2015/12/28/mlf-lecture-1-the-learning-problem/" class="next">[Machine Learning Foundations] Lecture 1. The Learning Problem</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/11/22/python-nltk-tools/">[Python] NLTK 工具整理</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/17/python-nltk-wordnet/">[Python] NLTK and WordNet</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch4-mining-data-streams/">[Massive Data Analysis] Mining Data Streams</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/nltk/" style="font-size: 15px;">nltk</a> <a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/standford-parser/" style="font-size: 15px;">standford parser</a> <a href="/blog/tags/wordnet/" style="font-size: 15px;">wordnet</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>

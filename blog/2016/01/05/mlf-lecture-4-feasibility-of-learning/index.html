@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>[MLF] Lecture 4: Feasibility of Learning | learning notes</title><link rel="stylesheet" type="text/css" href="/blog/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/blog/favicon.ico"><link rel="apple-touch-icon" href="/blog/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/blog/apple-touch-icon.png"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create','UA-68820773-2','auto');ga('send','pageview');</script></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[MLF] Lecture 4: Feasibility of Learning</h1><a id="logo" href="/blog/.">learning notes</a><p class="description"></p></div><div id="nav-menu"><a href="/blog/." class="current"><i class="fa fa-home"> Home</i></a><a href="/blog/archives/"><i class="fa fa-archive"> Archive</i></a><a href="/blog/about/"><i class="fa fa-user"> About</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">[MLF] Lecture 4: Feasibility of Learning</h1><div class="post-meta">Jan 5, 2016<span> | </span><span class="category"><a href="/blog/categories/Lecture-Notes/">Lecture Notes</a></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">Contents</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Learning-is-Impossible"><span class="toc-number">1.</span> <span class="toc-text">Learning is Impossible?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Probability-to-the-Rescue"><span class="toc-number">2.</span> <span class="toc-text">Probability to the Rescue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connection-to-Learning"><span class="toc-number">3.</span> <span class="toc-text">Connection to Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connection-to-Real-Learning"><span class="toc-number">4.</span> <span class="toc-text">Connection to Real Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary"><span class="toc-number">5.</span> <span class="toc-text">Summary</span></a></li></ol></div></div><div class="post-content"><p>這一章節主要探討的是機器學習的可行性。如果在某些情況下，機器學習做不到，是否可以加入其他的假設，或是用其他的方法使它可行。</p>
+<a id="more"></a>
+<h2 id="Learning-is-Impossible"><a href="#Learning-is-Impossible" class="headerlink" title="Learning is Impossible?"></a>Learning is Impossible?</h2><ul>
+<li>Controversial Answers<br>什麼樣的問題機器無法解？比如這個問題，給你六張圖，問另一張圖的 $g(x)$ 是 $+1$ 還是 $-1$？</li>
+</ul>
+<p>像這樣的問題，你可以說它是 $+1$，因為 $y_{n} = +1$ 的圖型都是對稱的，而這個圖是對稱的，所以是 $+1$。你也可以說是 $-1$，因為 $y_{n} = -1$ 的圖左上那一格都是黑色的，而這個圖是左上那格也是黑色的，所以是 $-1$。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d883-13-11.png" alt=""></p>
+<ul>
+<li>A Simple Binary Classification Problem<br>這個題目給了 $X_{n}$ 和 $Y_{n}$，機器學到了 $g$，那麼這個 $g$ 和理想的 $f$ 接近嗎？</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d883-18-30.png" alt=""></p>
+<p>把可能的 256 種函數都放到 Hypothesis set $H$ 裡，然後請機器選一個在這五筆資料 $D$ 上都和 $f$ 一模一樣的 $g$。問題是，這個 $g$ 是好的嗎？</p>
+<p>如果我們用原本的 $D$，那可以很容易說明 $g$ 近似於 $f$，但是如果看 $D$ 以外的資料，那我們如果要說明 $g$ 近似於 $f$ 是非常困難的。</p>
+<p>我們想要的一直都是在沒有看過的資料裡，找到一個和 $f$ 相近的 $g$。但是這個例子似乎告訴我們想要的事情是做不到的，天下沒有白吃的午餐。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2017/10/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d883-23-18.png" alt=""></p>
+<h2 id="Probability-to-the-Rescue"><a href="#Probability-to-the-Rescue" class="headerlink" title="Probability to the Rescue"></a>Probability to the Rescue</h2><ul>
+<li>Inferring Something Unknown<br>有沒有什麼工具或方法可以對未知的東西做推論？</li>
+</ul>
+<p>假如我們現在有一個罐子，裡面有很多橘色和綠色的彈珠，那我們有辦法推估出橘色彈珠的比例嗎？</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d883-42-30.png" alt=""></p>
+<p>用取樣的。隨機取十顆彈珠，裡面有三顆是橘色的，那我們可以說罐子裡橘色彈珠出現的機率<strong>大概是</strong> $30%$。在我們手上的彈珠中 (in-sample)，橘色彈珠的比例是 $\nu $，它可以告訴我們有關還在罐子裡 (out-of-sample) 的那些彈珠的資訊。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d884-18-29.png" alt=""></p>
+<p>這些資訊並沒有告訴我們罐子裡彈珠的比例，但是它告訴我們罐子裡的彈珠<strong>有很大的機率</strong>是 $30%$ 的橘色和 $70%$ 的綠色。那在數學上，$\mu $ 和 $\nu $ 又分別說明什麼呢？</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d884-21-06.png" alt=""></p>
+<ul>
+<li>Hoeffding’s Inequality<br>我們現在有罐子裡的比例 $\mu $ 和手上樣本的比例 $\nu $，如果今天取了很大的一把 $N$ 個彈珠，$\mu $ 和 $\nu $ 會很接近。</li>
+</ul>
+<p>Hoeffding’s Inequality 則說明了當 $N$ 很大，$\mu - \nu $ 就會是一個很小的數字，也就是說 $\mu $ 和 $\nu $ 相減差很遠的機率很小。只要符合這個不等式，就叫做 Probably Approximately Correct (PAC)，差不多是對的。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d884-28-37.png" alt=""></p>
+<p>如果容忍誤差 $\epsilon $ 很大，這個式子不成立的機率也會變小。所以我們不希望 $\epsilon $ 太大，這時候我們就會取很大的 $N$。也就是說如果 $N$ 越大，就有越大的機率可以得到 $\nu \approx \mu$。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d884-37-49.png" alt=""></p>
+<h2 id="Connection-to-Learning"><a href="#Connection-to-Learning" class="headerlink" title="Connection to Learning"></a>Connection to Learning</h2><p>這小節主要是把前一節提到的抽彈珠的問題，轉化成機器學習的問題。</p>
+<ul>
+<li>Connection to Learning<br>在機器學習裡，首先要有一個假設集合 $H$，現在我們從 $H$ 裡面取出其中一個固定的 $h(x)$。把一顆顆的彈珠想像成空間裡一個個 $x$，如果拿到的 $x$，使得 $h(x) \neq $f(x)$，就算這個 $h$ 答錯，像罐子裡的橘色彈珠；反之如果這個 $x$ 使 $h(x) = $f(x)$ 成立，它就答對，是綠色彈珠。當取樣的數字很大，我們就可以用已知的部分資料，來推估 $h(x)$ 在未知資料上的表現。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d884-57-46.png" alt=""></p>
+<ul>
+<li>Added Components<br>把上述的概念轉成元件加進去一開始的機器學習流程圖，有一個未知的機率分佈 $P$ on $X$，這個機率用來取樣產生了 training examples，同樣的機率也可以去衡量 $h$ 和 $f$ 是否接近。</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d885-19-10.png" alt=""></p>
+<ul>
+<li>The Formal Guarantee<br>接下來我們把剛剛提到的 $E_{in}$ 和 $E_{out}$ 套進 Hoeffding’s Inequality。$E_{in}$ 是 in-sample error，代表在已知樣本中 $h(x)$ 和 $f(x)$ 的誤差，$E_{out}$ 則是 out-of-sample error，代表已知樣本以外、其他未知的資料中的錯誤。</li>
+</ul>
+<p>Hoeffding’s Inequality 告訴我們當 $E_{in}$ 和 $E_{out}$ 很接近， $E_{in}$ 又很小的時候，$E_{out}$ 也會很小，代表當資料繼續由 $P$ 產生的時候，$h$ 和 $f$ 很接近。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d885-16-11.png" alt=""></p>
+<ul>
+<li>Verification of One $h$<br>機器學習的演算法選的是 $g$，前述的保證是在一個固定的 $h$ 上面，如果要做真的學習，必須靠演算法選出一個 $h$ 成為最後輸出的 $g$。</li>
+</ul>
+<p>如果選到的 $E_{in}(h)$ 很小，那麼就可以推論出 $g$ 和 $f$ 差不多。但事情不會這麼簡單，通常選到的 $h$ 它的 $E_{in}(h)$ 可能都很大，所以得到的是 $g$ 和 $f$ 不接近。到這邊其實並沒有做到真正的學習，而是驗證 Verification，驗證 $h$ 的表現。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d885-40-16.png" alt=""></p>
+<p>用 verifiying examples 來驗證 $h$ 在這份資料上表現得如何。如果用來取樣的 $P$ 和評斷 $h$ 好不好的分佈一致，那麼既可以確認這個 hypothesis 究竟好不好。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d885-44-03.png" alt=""></p>
+<h2 id="Connection-to-Real-Learning"><a href="#Connection-to-Real-Learning" class="headerlink" title="Connection to Real Learning"></a>Connection to Real Learning</h2><p>當只有一個 $h$ 的時候可以做驗證，如果有很多個 $h$ 的時候呢？</p>
+<ul>
+<li>Multiple $h$<br>假設有十個 $h$，其中有一個在已知的資料上全對，那是否要選這個 $h$？</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d886-14-01.png" alt=""></p>
+<p>想像成丟銅板，如果 150 個人每人拿一個銅板，連續丟五次，我們很有可能找到其中一個人丟了五次都是正面，那這代表什麼？</p>
+<p>把銅板想成資料，不好的銅板機率是 $\frac{1}{2}$，$E_{in}$ 是 $0$。不好的資料則是 $E_{in}$ 和 $E_{out}$ 差很遠。而 Hoeffding’s Inequality 在這裡可以說明如果把所有可能的資料 $D$ 都列出來，出現不好的資料的機率加起來非常的小。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d886-17-57.png" alt=""></p>
+<ul>
+<li>Bad Data fro many $h$<br>好的資料是不管演算法怎麼選都對，不好的資料就是演算法沒有辦法自由自在地做選擇（會踩到雷）。剛剛的資料都是用一個 $h$ 來推估，那如果有很多 $h$ 呢？</li>
+</ul>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d886-24-26.png" alt=""></p>
+<ul>
+<li>Bound of BAD Data<br>如果是有 $M$ 個（有限多個） $h$，我們一樣可以用取樣的方式來說明 $h(x)$ 和 $f(x)$ 是否接近。</li>
+</ul>
+<p>當資料量夠大，我們可以選到一個好的 $g$，這個 $g$ 的 $E_{in}$ 和 $E_{out}$ 是接近的。合理的做法是選一個 $E_{in}$ 最小的 $g$。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d886-28-58.png" alt=""></p>
+<ul>
+<li>The ‘Statistical’ Learning Flow<br>如果 $H$ 只有 $M$ 個，且取樣的資料 $N$ 夠大，不管演算法怎麼選，$E_{in}$ 和 $E_{out}$ 都會接近。如果 $E_{in}(g)$ 接近 $0$，那麼就可以推出來機器學習是可能的。</li>
+</ul>
+<p>但如果 $M$ 是無限大的呢？？下一章告訴你。</p>
+<p><img src="https://codingdiarysite.files.wordpress.com/2016/01/e89ea2e5b995e5bfabe785a7-2017-10-19-e4b88be58d886-37-12.png" alt=""></p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><ul>
+<li>Learning is Impossible? absolutely no free lunch outside $D$</li>
+<li>Probability to the Rescue: probably approximately correct outside $D$</li>
+<li>Connection to Learning: verification possible if $E_{in}(h)$ small for fixed $h$</li>
+<li>Connection to Real Learning: learning is possible if $\left |H \right|$ is finite and $E_{in}(g)$ is small</li>
+<li>Slides: <a href="http://www.csie.ntu.edu.tw/~htlin/mooc/doc/04_present.pdf" target="_blank" rel="external">http://www.csie.ntu.edu.tw/~htlin/mooc/doc/04_present.pdf</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/blog/2016/01/07/mlf-lecture-5-training-versus-testing/" class="pre">[MLF] Lecture 5: Training versus Testing</a><a href="/blog/2016/01/03/mlf-lecture-3-types-of-learning/" class="next">[Machine Learning Foundations] Lecture 3: Types of Learning</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://shannywu.github.io/blog"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recent</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/blog/2016/11/22/python-nltk-tools/">[Python] NLTK 工具整理</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/26/windows-flask-mod-wsgi-apache-on-windows/">Flask + mod_wsgi + Apache on Windows</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/07/17/python-nltk-wordnet/">[Python] NLTK and WordNet</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/06/16/tools-tmux-a-terminal-multiplexer/">tmux - A terminal multiplexer</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch9-recommendation-systems/">[Massive Data Analysis] Recommendation Systems</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/24/mda-ch8-advertising-on-the-web/">[Massive Data Analysis] Advertising on the Web</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-chapter-7-clustering/">[Massive Data Analysis] Clustering</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/23/mda-ch6-frequent-itemsets/">[Massive Data Analysis] Frequent itemsets</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch5-link-analysis/">[Massive Data Analysis] Link Analysis</a></li><li class="post-list-item"><a class="post-list-link" href="/blog/2016/05/22/mda-ch4-mining-data-streams/">[Massive Data Analysis] Mining Data Streams</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categories</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Lecture-Notes/">Lecture Notes</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Miscellaneous/">Miscellaneous</a></li><li class="category-list-item"><a class="category-list-link" href="/blog/categories/Python/">Python</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/blog/tags/flask/" style="font-size: 15px;">flask</a> <a href="/blog/tags/nltk/" style="font-size: 15px;">nltk</a> <a href="/blog/tags/re/" style="font-size: 15px;">re</a> <a href="/blog/tags/standford-parser/" style="font-size: 15px;">standford parser</a> <a href="/blog/tags/wordnet/" style="font-size: 15px;">wordnet</a> <a href="/blog/tags/linux/" style="font-size: 15px;">linux</a> <a href="/blog/tags/sort/" style="font-size: 15px;">sort</a> <a href="/blog/tags/grep/" style="font-size: 15px;">grep</a> <a href="/blog/tags/zgrep/" style="font-size: 15px;">zgrep</a> <a href="/blog/tags/edit-distance/" style="font-size: 15px;">edit distance</a> <a href="/blog/tags/spelling-correction/" style="font-size: 15px;">spelling correction</a> <a href="/blog/tags/collocation/" style="font-size: 15px;">collocation</a> <a href="/blog/tags/Linggle/" style="font-size: 15px;">Linggle</a> <a href="/blog/tags/map-reduce/" style="font-size: 15px;">map reduce</a> <a href="/blog/tags/pattern-grammar/" style="font-size: 15px;">pattern grammar</a> <a href="/blog/tags/WriteAhead/" style="font-size: 15px;">WriteAhead</a> <a href="/blog/tags/filter/" style="font-size: 15px;">filter</a> <a href="/blog/tags/lambda/" style="font-size: 15px;">lambda</a> <a href="/blog/tags/map/" style="font-size: 15px;">map</a> <a href="/blog/tags/match/" style="font-size: 15px;">match</a> <a href="/blog/tags/search/" style="font-size: 15px;">search</a> <a href="/blog/tags/reduce/" style="font-size: 15px;">reduce</a> <a href="/blog/tags/tmux/" style="font-size: 15px;">tmux</a> <a href="/blog/tags/apache/" style="font-size: 15px;">apache</a> <a href="/blog/tags/mod-wsgi/" style="font-size: 15px;">mod_wsgi</a> <a href="/blog/tags/windows/" style="font-size: 15px;">windows</a></div></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/blog/." rel="nofollow">learning notes.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/blog/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/blog/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/blog/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/blog/js/smartresize.js?v=0.0.0"></script></div></body></html>
